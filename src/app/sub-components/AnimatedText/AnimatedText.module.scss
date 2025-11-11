@@ -1,0 +1,12 @@
+.animatedText {
+	margin-top: 1.25rem;
+	position: absolute;
+	width: 100%;
+	text-align: center;
+	left: 0;
+
+	text-wrap: nowrap;
+	font-size: var(--mid-font-size);
+	font-weight: var(--regular-font-weight);
+	font-style: italic;
+}

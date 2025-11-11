@@ -1,0 +1,27 @@
+@keyframes current {
+	from {
+		transform: scale(0.96);
+		opacity: 0.75;
+	}
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes secondary {
+	from {
+		opacity: 0.5;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+.current {
+	animation: current 0.25s ease-in-out forwards;
+}
+
+.secondary {
+	animation: secondary 0.75s ease-in-out forwards;
+}

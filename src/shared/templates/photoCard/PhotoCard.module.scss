@@ -1,0 +1,53 @@
+.photoCard {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	position: relative;
+	width: 52rem;
+	height: 30rem;
+	border-radius: 2rem;
+	overflow: hidden;
+	padding: 1.5rem;
+
+	&__top,
+	&__bottom {
+		position: relative;
+		z-index: 2;
+	}
+
+	&__title {
+		font-size: var(--pre-title-font-size);
+		font-weight: var(--bold-font-weight);
+		text-transform: uppercase;
+		margin-bottom: 0.5rem;
+	}
+
+	&__date,
+	&__stack {
+		font-size: var(--large-font-size);
+	}
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to top,
+			rgba(0, 0, 0, 0.9),
+			rgba(0, 0, 0, 0.75),
+			rgba(0, 0, 0, 0.6),
+			rgba(0, 0, 0, 0),
+			rgba(0, 0, 0, 0),
+			rgba(0, 0, 0, 0),
+			rgba(0, 0, 0, 0.6),
+			rgba(0, 0, 0, 0.75),
+			rgba(0, 0, 0, 0.9)
+		);
+		z-index: 1;
+	}
+
+	img {
+		object-fit: fill;
+		z-index: 0;
+	}
+}

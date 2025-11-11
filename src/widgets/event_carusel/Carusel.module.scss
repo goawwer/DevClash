@@ -1,0 +1,47 @@
+.carusel {
+	position: relative;
+	width: 100%;
+
+	button {
+		font-size: 6rem;
+		font-weight: var(--bold-font-weight);
+		opacity: 0.5;
+		transition: 0.2s all 0.1s ease-out;
+
+		&:hover {
+			opacity: 1;
+			font-size: 8rem;
+		}
+	}
+
+	&__currentEvent {
+		width: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 5rem;
+	}
+
+	&__otherEvents {
+		display: flex;
+		width: 100%;
+		align-items: center;
+		justify-content: space-between;
+		opacity: 0.25;
+		position: absolute;
+		z-index: -1;
+		top: 0;
+		left: 0;
+	}
+
+	&__nextEvent,
+	&__prevEvent {
+		width: fit-content;
+		transform: scale(0.5);
+		transform-origin: left center;
+	}
+
+	&__nextEvent {
+		transform-origin: left center;
+	}
+}

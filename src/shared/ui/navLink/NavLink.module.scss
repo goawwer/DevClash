@@ -1,0 +1,14 @@
+.navLink {
+	font-weight: var(--regular-font-weight);
+	font-size: var(--mid-font-size);
+	color: var(--white-color);
+	transition: 0.25s all 0.05s ease;
+
+	&:hover {
+		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+	}
+
+	&--active {
+		font-weight: var(--bold-font-weight);
+	}
+}

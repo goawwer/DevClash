@@ -1,0 +1,21 @@
+.info {
+	margin-top: 48px;
+
+	&__title {
+		margin-bottom: 1rem;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		justify-content: end;
+		align-items: end;
+	}
+
+	&__text {
+		font-size: var(--large-font-size);
+		text-align: justify;
+		margin-bottom: 3rem;
+	}
+}

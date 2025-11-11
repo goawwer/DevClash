@@ -1,0 +1,22 @@
+.description {
+	display: flex;
+	gap: 4rem;
+
+	h2 {
+		font-size: var(--title-font-size);
+		color: var(--orange-color);
+	}
+
+	ul {
+		padding-top: 0.75rem;
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+
+		li {
+			text-align: justify;
+			font-size: var(--large-font-size);
+			font-weight: var(--regular-font-weight);
+		}
+	}
+}

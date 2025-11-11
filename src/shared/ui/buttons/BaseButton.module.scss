@@ -1,0 +1,28 @@
+.baseButton {
+	background-color: var(--white-color);
+	border-radius: 1000rem;
+	font-weight: var(--bold-font-weight);
+	text-transform: uppercase;
+	padding: 0.25rem 1.2rem;
+	color: var(--black-color);
+
+	&--default {
+		font-size: var(--giant-font-size);
+		padding: 0.5rem 2rem;
+	}
+
+	&--low {
+		font-size: var(--large-font-size);
+	}
+
+	&:hover {
+		transition: all 0.2s ease-in;
+		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+	}
+
+	&--bordered {
+		background: transparent;
+		color: var(--white-color);
+		border: 0.25rem solid var(--white-color);
+	}
+}

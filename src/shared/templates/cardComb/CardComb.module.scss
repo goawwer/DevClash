@@ -1,0 +1,42 @@
+.combCard {
+	width: fit-content;
+	background-color: var(--black-color);
+	color: var(--white-color);
+	border-radius: 1rem;
+	transition: all 0.25s ease-out;
+
+	&:hover {
+		transform: translateY(-0.25rem);
+		cursor: pointer;
+	}
+
+	&__topInfo {
+		padding-left: 1rem;
+		padding-bottom: 0.5rem;
+		padding-top: 0.5rem;
+		font-size: var(--base-font-size);
+		font-weight: var(--regular-font-weight);
+	}
+
+	&__main {
+		background-color: var(--dark-grey-color);
+		padding: 1rem;
+		border-radius: 1rem;
+
+		h3 {
+			font-size: var(--giant-font-size) !important;
+			color: var(--white-color) !important;
+			margin-bottom: 1rem;
+		}
+	}
+
+	&__subTitle {
+		font-size: var(--base-font-size) !important;
+		font-weight: var(--regular-font-weight);
+	}
+
+	&__content {
+		font-size: var(--base-font-size) !important;
+		margin-top: 1rem;
+	}
+}

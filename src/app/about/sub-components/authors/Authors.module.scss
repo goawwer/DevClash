@@ -1,0 +1,15 @@
+.authors {
+	&__title {
+		color: var(--orange-color);
+		font-size: var(--title-font-size);
+		margin-bottom: 3rem;
+	}
+
+	&__container {
+		display: flex;
+		flex-direction: row;
+		gap: 1.5rem;
+		flex-wrap: wrap;
+		width: 100%;
+	}
+}

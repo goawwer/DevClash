@@ -1,0 +1,11 @@
+.form {
+	width: 60rem;
+
+	&__inputs {
+		display: flex;
+		justify-content: space-between;
+		gap: 3rem;
+		flex-wrap: wrap;
+		margin-bottom: 2rem;
+	}
+}

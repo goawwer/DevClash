@@ -1,0 +1,28 @@
+.chooser {
+	&__variants {
+		display: flex;
+		gap: 2rem;
+		margin-bottom: 3rem;
+		height: 2.5rem;
+		align-items: center;
+	}
+
+	&__button {
+		font-size: var(--giant-font-size);
+		text-transform: uppercase;
+		transition: 0.25s all 0.1s ease-in;
+		border-radius: 5rem;
+
+		&--active {
+			background-color: var(--white-color);
+			padding: 0.25rem 1.2rem;
+			color: var(--blue-color);
+			filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.25));
+		}
+
+		&:hover {
+			transition: 0.25s all ease-in;
+			filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+		}
+	}
+}
