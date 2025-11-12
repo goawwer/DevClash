@@ -16,6 +16,7 @@ const EmailInput = forwardRef<HTMLInputElement, EmailInputProps>(
 				ref={ref}
 				{...register}
 				{...props}
+				aria-label="Email"
 			/>
 		);
 	}

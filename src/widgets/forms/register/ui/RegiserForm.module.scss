@@ -4,8 +4,27 @@
 	&__inputs {
 		display: flex;
 		justify-content: space-between;
-		gap: 3rem;
+		row-gap: 2rem;
+		column-gap: 4rem;
 		flex-wrap: wrap;
-		margin-bottom: 2rem;
+		margin-bottom: 5rem;
+	}
+
+	&__buttons {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__loginLink {
+		color: var(--white-color);
+		font-size: var(--giant-font-size);
+		font-weight: var(--regular-font-weight);
+		text-transform: uppercase;
+
+		&:hover, &:focus-visible, &:focus {
+			transition: all 0.2s ease-in;
+		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+		}
 	}
 }

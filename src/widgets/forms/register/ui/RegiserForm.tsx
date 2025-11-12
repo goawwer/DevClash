@@ -13,6 +13,7 @@ import {
 } from "@/features/forms";
 import { BaseButton } from "@/shared/ui";
 import { useState } from "react";
+import Link from "next/link";
 
 type FormValues = User & {
 	confirmPassword: string;
@@ -36,7 +37,7 @@ const RegisterForm = () => {
 	const password = watch("password");
 
 	return (
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+		<form className={styles.form} onSubmit={handleSubmit(onSubmit)} aria-label="Форма регистрации">
 			<div className={styles.form__inputs}>
 				<UsernameInput
 					width={27}
@@ -59,7 +60,7 @@ const RegisterForm = () => {
 				<PasswordInput
 					width={27}
 					label="подтвердите пароль"
-					error={errors.password?.message}
+					error={errors.confirmPassword?.message}
 					register={register("confirmPassword", {
 						validate: (value) =>
 							value === password || "Пароли не совпадают",
@@ -67,6 +68,7 @@ const RegisterForm = () => {
 				/>
 			</div>
 			<div className={styles.form__buttons}>
+				<Link href={"/login"} className={styles.form__loginLink}>Уже есть аккаунт?</Link>
 				<BaseButton type="submit">Создать аккаунт</BaseButton>
 			</div>
 			<h2>{a}</h2>

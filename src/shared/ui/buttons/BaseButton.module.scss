@@ -15,7 +15,7 @@
 		font-size: var(--large-font-size);
 	}
 
-	&:hover {
+	&:hover, &:focus, &:focus-visible {
 		transition: all 0.2s ease-in;
 		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
 	}

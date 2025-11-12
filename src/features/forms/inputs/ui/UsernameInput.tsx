@@ -16,6 +16,7 @@ const UsernameInput = forwardRef<HTMLInputElement, UsernameInputProps>(
 				ref={ref}
 				{...register}
 				{...props}
+				aria-label="Username"
 			/>
 		);
 	}

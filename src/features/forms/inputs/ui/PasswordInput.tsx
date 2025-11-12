@@ -20,6 +20,7 @@ const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
 				ref={ref}
 				{...register}
 				{...props}
+				aria-label={label}
 			/>
 		);
 	}

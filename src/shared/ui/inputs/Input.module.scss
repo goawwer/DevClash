@@ -18,6 +18,7 @@
 		padding-left: 1.25rem;
 		font-size: var(--mid-font-size);
 		font-weight: var(--regular-font-weight);
+		margin-bottom: 0.25rem;
 	}
 
 	&__input {
@@ -26,16 +27,24 @@
 		border: 0.25rem solid var(--white-color);
 		border-radius: 1000rem;
 		font-size: var(--large-font-size);
+		transition: all 0.1s ease;
 
 		&::placeholder {
 			color: var(--white-color);
 			opacity: 0.65;
 		}
+
+		&:focus, &:focus-visible {
+			box-shadow: 0 0 0.5rem var(--white-color);
+		}
 	}
 
 	&__error {
+		padding-left: 1.25rem;
+		text-wrap: wrap;
 		margin-top: 0.25rem;
 		color: var(--white-color);
 		animation: error 0.25s ease-in-out forwards;
+		font-style: italic;
 	}
 }

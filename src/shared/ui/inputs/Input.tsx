@@ -5,7 +5,7 @@ import type { InputType } from "./type";
 const Input = forwardRef<HTMLInputElement, InputType>(
 	({ label, error, width = 25, ...props }, ref) => {
 		return (
-			<div className={styles.input}>
+			<div className={styles.input} style={{ width: `${width}rem` }}>
 				{label && (
 					<label className={styles.input__label} htmlFor={props.id}>
 						{label}
@@ -17,7 +17,7 @@ const Input = forwardRef<HTMLInputElement, InputType>(
 					ref={ref}
 					style={{ width: `${width}rem` }}
 				/>
-				{error && <span className={styles.input__error}>{error}</span>}
+				{error && <span className={styles.input__error}>* {error}</span>}
 			</div>
 		);
 	}
