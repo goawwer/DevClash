@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./RegiserForm.module.scss";
+import styles from "./Auth.module.scss";
 import { useForm } from "react-hook-form";
 import { User } from "@/entities/user.interface";
 import {
@@ -11,7 +11,7 @@ import {
 	UsernameInput,
 	usernameOptions,
 } from "@/features/forms";
-import { BaseButton } from "@/shared/ui";
+import { BaseButton, InputFile } from "@/shared/ui";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ type FormValues = User & {
 	confirmPassword: string;
 };
 
-const RegisterForm = () => {
+const RegisterOrganizerForm = () => {
 	const {
 		register,
 		handleSubmit,
@@ -27,6 +27,12 @@ const RegisterForm = () => {
 		watch,
 	} = useForm<FormValues>();
 
+
+	const [photoURL, setPhotoURL] = useState<File | undefined>(undefined)
+
+	const handleSetPhotoURL = (photo: File) => {
+		setPhotoURL(photo)
+	}
 	const [a, setA] = useState(0);
 
 	const onSubmit = (data: FormValues) => {
@@ -66,6 +72,8 @@ const RegisterForm = () => {
 							value === password || "Пароли не совпадают",
 					})}
 				/>
+
+				<InputFile onFileSelect={handleSetPhotoURL} label="Логотип" formats={["png", "jpg", "jpeg", "svg"]}/>
 			</div>
 			<div className={styles.form__buttons}>
 				<Link href={"/login"} className={styles.form__loginLink}>Уже есть аккаунт?</Link>
@@ -76,4 +84,4 @@ const RegisterForm = () => {
 	);
 };
 
-export default RegisterForm;
+export default RegisterOrganizerForm;

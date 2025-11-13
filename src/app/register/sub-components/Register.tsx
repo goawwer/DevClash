@@ -1,5 +1,5 @@
 import { Card, Chooser } from "@/shared/ui";
-import { RegisterForm } from "@/widgets/forms";
+import { RegisterParticipantForm, RegisterOrganizerForm } from "@/widgets/forms";
 import styles from "./Register.module.scss";
 
 const registerVariants = [
@@ -7,11 +7,15 @@ const registerVariants = [
 		name: "Участник",
 		value: (
 			<Card color="blue">
-				<RegisterForm />
+				<RegisterParticipantForm />
 			</Card>
 		),
 	},
-	{ name: "Организатор", value: <></> },
+	{ name: "Организатор", value: (
+			<Card color="blue">
+				<RegisterOrganizerForm />
+			</Card>
+		) },
 ];
 
 export default function Register() {

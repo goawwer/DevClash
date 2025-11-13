@@ -4,4 +4,5 @@ export { default as Logo } from "./logo/Logo";
 export { default as Card } from "./card/Card";
 export { default as Chooser } from "./chooser/Chooser";
 export { default as Input } from "./inputs/Input";
+export { default as InputFile } from "./inputs/InputFile";
 export type { InputType } from "./inputs/type";
