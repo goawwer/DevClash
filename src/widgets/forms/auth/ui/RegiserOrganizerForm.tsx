@@ -16,6 +16,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 type FormValues = User & {
+	logo: File | undefined;
 	confirmPassword: string;
 };
 
@@ -25,14 +26,9 @@ const RegisterOrganizerForm = () => {
 		handleSubmit,
 		formState: { errors },
 		watch,
+		setValue,
 	} = useForm<FormValues>();
 
-
-	const [photoURL, setPhotoURL] = useState<File | undefined>(undefined)
-
-	const handleSetPhotoURL = (photo: File) => {
-		setPhotoURL(photo)
-	}
 	const [a, setA] = useState(0);
 
 	const onSubmit = (data: FormValues) => {
@@ -43,7 +39,11 @@ const RegisterOrganizerForm = () => {
 	const password = watch("password");
 
 	return (
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)} aria-label="Форма регистрации">
+		<form
+			className={styles.form}
+			onSubmit={handleSubmit(onSubmit)}
+			aria-label="Форма регистрации"
+		>
 			<div className={styles.form__inputs}>
 				<UsernameInput
 					width={27}
@@ -73,10 +73,17 @@ const RegisterOrganizerForm = () => {
 					})}
 				/>
 
-				<InputFile onFileSelect={handleSetPhotoURL} label="Логотип" formats={["png", "jpg", "jpeg", "svg"]}/>
+				<InputFile
+					label="Логотип"
+					formats={["png", "jpg", "jpeg", "svg"]}
+					name="logo"
+					onFileSelect={(file: File) => setValue("logo", file)}
+				/>
 			</div>
 			<div className={styles.form__buttons}>
-				<Link href={"/login"} className={styles.form__loginLink}>Уже есть аккаунт?</Link>
+				<Link href={"/login"} className={styles.form__loginLink}>
+					Уже есть аккаунт?
+				</Link>
 				<BaseButton type="submit">Создать аккаунт</BaseButton>
 			</div>
 			<h2>{a}</h2>

@@ -10,13 +10,20 @@
 }
 
 .inputFile {
-
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 2rem;
 
 	&__label {
+		font-size: var(--mid-font-size);
+		font-weight: var(--regular-font-weight);
+		width: 100%;
+		margin-bottom: 1rem;
+		text-transform: lowercase;
+		padding-left: 1.25rem;
+	}
+
+	&__button {
 		font-size: var(--giant-font-size);
 		font-weight: var(--bold-font-weight);
 		padding: 0.5rem 1.25rem;
@@ -25,7 +32,9 @@
 		text-transform: uppercase;
 		transition: all 0.1s ease;
 
-		&:hover, &:focus, &:focus-visible {
+		&:hover,
+		&:focus,
+		&:focus-visible {
 			cursor: pointer;
 			box-shadow: 0 0 0.5rem var(--white-color);
 		}
@@ -47,6 +56,6 @@
 		background-size: contain;
 		background-position: center;
 		background-repeat: no-repeat;
+		margin-bottom: 1rem;
 	}
 }
-

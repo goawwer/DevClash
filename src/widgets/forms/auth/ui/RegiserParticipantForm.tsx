@@ -37,7 +37,11 @@ const RegisterForm = () => {
 	const password = watch("password");
 
 	return (
-		<form className={styles.form} onSubmit={handleSubmit(onSubmit)} aria-label="Форма регистрации">
+		<form
+			className={styles.form}
+			onSubmit={handleSubmit(onSubmit)}
+			aria-label="Форма регистрации"
+		>
 			<div className={styles.form__inputs}>
 				<UsernameInput
 					width={27}
@@ -68,7 +72,9 @@ const RegisterForm = () => {
 				/>
 			</div>
 			<div className={styles.form__buttons}>
-				<Link href={"/login"} className={styles.form__loginLink}>Уже есть аккаунт?</Link>
+				<Link href={"/login"} className={styles.form__loginLink}>
+					Уже есть аккаунт?
+				</Link>
 				<BaseButton type="submit">Создать аккаунт</BaseButton>
 			</div>
 			<h2>{a}</h2>
