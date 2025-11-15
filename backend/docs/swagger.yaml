@@ -1,0 +1,149 @@
+basePath: /
+definitions:
+  dto.LoginInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  dto.SignUpInput:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  wrapper.CustomError:
+    properties:
+      err: {}
+      statusCode:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: IT events platform
+  title: Dev clash API
+  version: "1.0"
+paths:
+  /api/users/check:
+    get:
+      consumes:
+      - application/json
+      description: Check current state of authorization
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Authorized
+      tags:
+      - user
+  /api/users/logout:
+    post:
+      consumes:
+      - application/json
+      description: Refreshes TokenPair and check refresh token is consumed or not
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Logout
+      tags:
+      - user
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return access + refresh tokenss
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      summary: Login
+      tags:
+      - auth
+  /auth/refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refreshes TokenPair and check refresh token is consumed or not
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      summary: Refresh
+      tags:
+      - auth
+  /auth/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates a user in database
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignUpInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      summary: Sign Up
+      tags:
+      - auth
+securityDefinitions:
+  CookieAuth:
+    description: JWT access token stored in HttpOnly cookie named `access`
+    in: cookie
+    name: access
+    type: apiKey
+swagger: "2.0"

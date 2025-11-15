@@ -13,6 +13,16 @@ import (
 	"github.com/goawwer/devclash/pkg/logger"
 )
 
+// @Summary      Sign Up
+// @Description  Creates a user in database
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        credentials  body      dto.SignUpInput  true  "Login credentials"
+// @Success      200
+// @Failure      400          {object} wrapper.CustomError
+// @Failure      500          {object} wrapper.CustomError
+// @Router       /auth/signup [post]
 func (h *AuthHandler) SignUp(w *wrapper.Wrapper) error {
 	var input dto.SignUpInput
 
@@ -30,6 +40,16 @@ func (h *AuthHandler) SignUp(w *wrapper.Wrapper) error {
 	return nil
 }
 
+// @Summary      Login
+// @Description  Authenticate user and return access + refresh tokenss
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        credentials  body      dto.LoginInput  true  "Login credentials"
+// @Success      200
+// @Failure      400          {object} wrapper.CustomError
+// @Failure      401          {object} wrapper.CustomError
+// @Router       /auth/login [post]
 func (h *AuthHandler) Login(w *wrapper.Wrapper) error {
 	var input dto.LoginInput
 
@@ -72,6 +92,14 @@ func (h *AuthHandler) Login(w *wrapper.Wrapper) error {
 	return nil
 }
 
+// @Summary      Refresh
+// @Description  Refreshes TokenPair and check refresh token is consumed or not
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Success      200
+// @Failure      401          {object} wrapper.CustomError
+// @Router       /auth/refresh [post]
 func (h *AuthHandler) Refresh(w *wrapper.Wrapper) error {
 	tokenPair, err := middleware.RefreshToken(w.Request())
 	if err != nil {

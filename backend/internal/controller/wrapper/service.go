@@ -11,7 +11,7 @@ type PublicHandler func(w *Wrapper) error
 
 func PublicWrap(handler PublicHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-type", "application/json")
+		w.Header().Set("Content-Type", "application/json")
 
 		wrapper := &Wrapper{
 			w: w,
@@ -33,7 +33,7 @@ type AuthHandler func(w *Wrapper, c *middleware.CustomClaims) (any, error)
 
 func AuthWrap(handler AuthHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-type", "application/json")
+		w.Header().Set("Content-Type", "application/json")
 
 		wrapper := &Wrapper{
 			w: w,
