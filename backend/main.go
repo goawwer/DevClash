@@ -11,7 +11,6 @@ import (
 //	@title			Dev clash API
 //	@version		1.0
 //	@description	IT events platform
-//
 // @securityDefinitions.apikey  CookieAuth
 // @in                          cookie
 // @name                        access

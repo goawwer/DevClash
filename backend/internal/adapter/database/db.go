@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/goawwer/devclash/pkg/logger"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"github.com/sirupsen/logrus"
 )
 
 type ENV string
@@ -67,11 +65,6 @@ func Init(ctx context.Context, cfg *Config) error {
 	if err := db.PingContext(ctx); err != nil {
 		return fmt.Errorf("failed to create a connection to database: %w", err)
 	}
-
-	logger.WithFields(logrus.Fields{
-		"component": "database",
-		"address":   cfg.DSN(),
-	}).Info("started successfully")
 
 	database = &Db{db}
 

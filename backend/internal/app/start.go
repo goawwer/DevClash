@@ -19,6 +19,7 @@ import (
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
 	"github.com/goawwer/devclash/pkg/server"
+	"github.com/sirupsen/logrus"
 )
 
 func Start(ctx context.Context, cfg *config.Config) {
@@ -27,6 +28,10 @@ func Start(ctx context.Context, cfg *config.Config) {
 	if err := database.Init(ctx, &cfg.Database); err != nil {
 		logger.Error("failed to initialize database in start function: ", err)
 	}
+
+	logger.WithFields(logrus.Fields{
+		"address": cfg.Database.DSN(),
+	}).Info("started successfully")
 
 	defer func() {
 		logger.Info("closing database connection")
