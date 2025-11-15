@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16
+    container_name: dev_clash_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data
+    ports: 
+      - "${DB_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 10s
+      retries: 5
+    volumes: 
+      - pgdata:/var/lib/postgresql/data
+  
+  test_db:
+    image: postgres:16
+    container_name: dev_clash_test_db
+    restart: always 
+    environment:
+      POSTGRES_DB: ${TEST_DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports: 
+      - "${TEST_DB_PORT}:5432"
+  
+
+  redis: 
+    image: redis 
+    container_name: dev_clash_redis
+    restart: on-failure
+    ports: 
+      - "${REDIS_PORT}:6379"
+    volumes: 
+      - redis_data:/data
+
+volumes:
+  pgdata:
+  redis_data:
