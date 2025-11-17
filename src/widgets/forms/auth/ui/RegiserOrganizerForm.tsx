@@ -86,7 +86,7 @@ const RegisterOrganizerForm = () => {
 				</Link>
 				<BaseButton type="submit">Создать аккаунт</BaseButton>
 			</div>
-			<h2>{a}</h2>
+			<h2>Количество: {a}</h2>
 		</form>
 	);
 };
