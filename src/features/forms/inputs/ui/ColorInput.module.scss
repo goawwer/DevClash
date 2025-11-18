@@ -1,0 +1,49 @@
+.colorInput {
+	border-radius: 2rem;
+	height: 22.8rem;
+	overflow: hidden;
+
+	&__body {
+		padding: 2rem;
+		width: 27rem;
+		background-color: var(--dark-blue-color);
+		border-radius: 2rem;
+		padding-bottom: 100%;
+	}
+
+	&__label,
+	&__title {
+		font-size: var(--mid-font-size);
+		font-weight: var(--regular-font-weight);
+		text-transform: lowercase;
+		margin-bottom: 3rem;
+	}
+
+	&__label {
+		padding-left: 1.25rem;
+		margin-bottom: 1rem;
+	}
+
+	&__container {
+		display: flex;
+		gap: 2rem;
+		flex-wrap: wrap;
+	}
+}
+
+.button {
+	height: 3rem;
+	width: 3rem;
+	border-radius: 1000rem;
+	transition: all 0.25s ease-in;
+
+	&:hover,
+	&:focus,
+	&:focus-visible {
+		transform: scale(1.5);
+	}
+
+	&--current {
+		transform: scale(1.5);
+	}
+}

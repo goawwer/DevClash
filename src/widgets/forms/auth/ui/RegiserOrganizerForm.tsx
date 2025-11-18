@@ -4,6 +4,7 @@ import styles from "./Auth.module.scss";
 import { useForm } from "react-hook-form";
 import { User } from "@/entities/user.interface";
 import {
+	ColorInput,
 	EmailInput,
 	emailOptions,
 	PasswordInput,
@@ -16,6 +17,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 type FormValues = User & {
+	color: string;
 	logo: File | undefined;
 	confirmPassword: string;
 };
@@ -78,6 +80,10 @@ const RegisterOrganizerForm = () => {
 					formats={["png", "jpg", "jpeg", "svg"]}
 					name="logo"
 					onFileSelect={(file: File) => setValue("logo", file)}
+				/>
+
+				<ColorInput
+					setFormColor={(color: string) => setValue("color", color)}
 				/>
 			</div>
 			<div className={styles.form__buttons}>
