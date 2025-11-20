@@ -4,7 +4,7 @@ export default function Logo({ fontSize = 32 }: { fontSize?: number }) {
 			style={{
 				fontFamily: `var(--font-genos)`,
 				fontStyle: "italic",
-				fontSize: `${fontSize}px`,
+				fontSize: `${fontSize}rem`,
 			}}
 		>
 			<span

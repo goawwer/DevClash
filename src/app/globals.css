@@ -67,3 +67,24 @@ h1 {
 h2 {
 	font-size: var(--pre-title-font-size);
 }
+
+@media (max-width: 768px) {
+	html,
+	body {
+		font-size: 14px;
+		--base-font-size: 14px;
+		--mid-font-size: 1.2rem;
+		--large-font-size: 1.25rem;
+		--giant-font-size: 1.75rem;
+		--pre-title-font-size: 2rem;
+		--title-font-size: 3rem;
+	}
+}
+
+@media (max-width: 375px) {
+	html,
+	body {
+		font-size: 3.73vw;
+		--base-font-size: 14px;
+	}
+}

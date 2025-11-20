@@ -40,25 +40,25 @@ const RegisterForm = () => {
 		>
 			<div className={styles.form__inputs}>
 				<UsernameInput
-					width={27}
+					width={25}
 					error={errors.username?.message}
 					register={register("username", usernameOptions)}
 				/>
 
 				<EmailInput
-					width={27}
+					width={25}
 					error={errors.email?.message}
 					register={register("email", emailOptions)}
 				/>
 
 				<PasswordInput
-					width={27}
+					width={25}
 					error={errors.password?.message}
 					register={register("password", passwordOptions)}
 				/>
 
 				<PasswordInput
-					width={27}
+					width={25}
 					label="подтвердите пароль"
 					error={errors.confirmPassword?.message}
 					register={register("confirmPassword", {

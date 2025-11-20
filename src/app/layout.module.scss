@@ -22,6 +22,10 @@
 
 	&__main {
 		margin-top: 6rem;
+
+		@media (max-width: 425px) {
+			margin-top: 4rem;
+		}
 	}
 }
 

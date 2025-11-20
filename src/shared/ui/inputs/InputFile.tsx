@@ -13,7 +13,7 @@ interface FileUploadInputProps {
 
 const FileUploadInput = forwardRef<HTMLInputElement, FileUploadInputProps>(
 	(
-		{ label = "Изображение", width = 27, formats, name, onFileSelect },
+		{ label = "Изображение", width = 25, formats, name, onFileSelect },
 		ref
 	) => {
 		const [fileURL, setFileURL] = useState<string>("");

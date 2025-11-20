@@ -11,5 +11,10 @@
 		gap: 1.5rem;
 		flex-wrap: wrap;
 		width: 100%;
+
+		@media (max-width: 1280px) {
+			gap: 3rem;
+			justify-content: center;
+		}
 	}
 }

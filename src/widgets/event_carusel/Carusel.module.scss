@@ -14,12 +14,46 @@
 		}
 	}
 
+	&__portableButtons {
+		width: 100%;
+		display: none;
+		padding: 1rem;
+		margin-bottom: 1rem;
+
+		@media (max-width: 768px) {
+			display: flex;
+			justify-content: space-between;
+			button {
+				display: inline-block;
+				font-size: 3rem;
+
+				&:hover {
+					opacity: 1;
+					font-size: 3rem;
+
+					transform: scale(1.25);
+				}
+			}
+		}
+	}
+
 	&__currentEvent {
 		width: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		gap: 5rem;
+
+		button {
+			@media (max-width: 768px) {
+				display: none;
+				gap: 3rem;
+			}
+		}
+
+		@media (max-width: 1279px) {
+			gap: 3rem;
+		}
 	}
 
 	&__otherEvents {
@@ -32,16 +66,24 @@
 		z-index: -1;
 		top: 0;
 		left: 0;
+		margin-inline: auto;
+
+		@media (max-width: 1000px) {
+			display: none;
+		}
+	}
+
+	&__otherEventsContainer {
+		position: relative;
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 30rem;
 	}
 
 	&__nextEvent,
 	&__prevEvent {
 		width: fit-content;
-		transform: scale(0.5);
-		transform-origin: left center;
-	}
-
-	&__nextEvent {
-		transform-origin: left center;
 	}
 }

@@ -13,7 +13,7 @@ export default function HeaderUnauth() {
 		<header className={styles.header}>
 			<nav>
 				<div className={styles.header__logo}>
-					<Logo />
+					<Logo fontSize={2} />
 				</div>
 
 				<div className={styles[`header__pageList--desktop`]}>

@@ -6,11 +6,13 @@ export default function Home() {
 	return (
 		<>
 			<h1 className={styles.title}>
-				Присоединяйтесь <br /> к ПЕРЕДОВОМУ ИТ-сообществу
+				станьте частью <br /> пЕРЕДОВОго ИТ-сообщества
 			</h1>
 
 			<div>
-				<AnimatedText />
+				<p className={styles.subText}>
+					Здесь организуются ИТ-мероприятия любого уровня
+				</p>
 			</div>
 
 			<section className={styles.section}>

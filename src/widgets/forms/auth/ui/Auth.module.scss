@@ -1,19 +1,26 @@
 .form {
-	width: 60rem;
+	width: 100%;
+	padding: 1rem;
 
 	&__inputs {
 		display: flex;
 		justify-content: space-between;
 		row-gap: 2rem;
-		column-gap: 4rem;
+		column-gap: 2rem;
 		flex-wrap: wrap;
 		margin-bottom: 5rem;
+
+		@media (max-width: 1024px) {
+			row-gap: 3rem;
+			justify-content: space-around;
+		}
 	}
 
 	&__buttons {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+		gap: 3rem;
 	}
 
 	&__loginLink {
@@ -22,9 +29,11 @@
 		font-weight: var(--regular-font-weight);
 		text-transform: uppercase;
 
-		&:hover, &:focus-visible, &:focus {
+		&:hover,
+		&:focus-visible,
+		&:focus {
 			transition: all 0.2s ease-in;
-		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+			filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
 		}
 	}
 }

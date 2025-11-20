@@ -5,7 +5,7 @@ export default function Footer() {
 	return (
 		<footer className={styles.footer}>
 			<p>
-				Сайт <Logo fontSize={20} /> является собственностью творческой
+				Сайт <Logo fontSize={1.25} /> является собственностью творческой
 				организации «Jonklers®»
 			</p>
 		</footer>

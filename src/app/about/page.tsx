@@ -8,7 +8,7 @@ export default function Home() {
 	return (
 		<>
 			<h1 className={styles.title}>
-				Кратко про <br /> <Logo fontSize={64} />
+				Кратко про <br /> <Logo fontSize={4} />
 			</h1>
 
 			<section className={styles.sectionDescription}>

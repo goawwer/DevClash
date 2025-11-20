@@ -3,7 +3,7 @@ import styles from "./Input.module.scss";
 import type { InputType } from "./type";
 
 const Input = forwardRef<HTMLInputElement, InputType>(
-	({ label, error, width = 25, ...props }, ref) => {
+	({ label, error, width = 24, ...props }, ref) => {
 		return (
 			<div className={styles.input} style={{ width: `${width}rem` }}>
 				{label && (
@@ -17,7 +17,9 @@ const Input = forwardRef<HTMLInputElement, InputType>(
 					ref={ref}
 					style={{ width: `${width}rem` }}
 				/>
-				{error && <span className={styles.input__error}>* {error}</span>}
+				{error && (
+					<span className={styles.input__error}>* {error}</span>
+				)}
 			</div>
 		);
 	}

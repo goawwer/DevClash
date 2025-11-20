@@ -32,6 +32,18 @@ const GradientContainer: FC<GradientContainerProps> = ({
 					background: `linear-gradient(to bottom, var(--dark-${color}-color), var(--black-color))`,
 				}}
 			></div>
+			<div
+				style={{
+					height: "100vh",
+					background: `linear-gradient(to bottom, var(--black-color), var(--dark-${color}-color))`,
+				}}
+			></div>
+			<div
+				style={{
+					height: "100vh",
+					background: `linear-gradient(to bottom, var(--dark-${color}-color), var(--black-color))`,
+				}}
+			></div>
 		</div>
 	);
 };

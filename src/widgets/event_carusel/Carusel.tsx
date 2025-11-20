@@ -60,6 +60,23 @@ const Carusel: FC<Props> = ({ events }) => {
 
 	return (
 		<div className={styles.carusel}>
+			<div className={styles.carusel__portableButtons}>
+				<button
+					className={styles.carusel__switchButton}
+					type="button"
+					onClick={() => handleSwitch(-1)}
+				>
+					{"<"}
+				</button>
+
+				<button
+					className={styles.carusel__switchButton}
+					type="button"
+					onClick={() => handleSwitch(1)}
+				>
+					{">"}
+				</button>
+			</div>
 			{/* current */}
 			<div
 				key={currentEvent}
@@ -85,26 +102,28 @@ const Carusel: FC<Props> = ({ events }) => {
 			</div>
 
 			<div className={styles.carusel__otherEvents}>
-				{/* prev */}
-				<div
-					className={cn(
-						styles.carusel__prevEvent,
-						animation.secondary
-					)}
-					key={currentEvent - 1}
-				>
-					<PhotoCard {...events[treeArray().prev]} />
-				</div>
+				<div className={styles.carusel__otherEventsContainer}>
+					{/* prev */}
+					<div
+						className={cn(
+							styles.carusel__prevEvent,
+							animation.secondary
+						)}
+						key={currentEvent - 1}
+					>
+						<PhotoCard {...events[treeArray().prev]} width={25} />
+					</div>
 
-				{/* next */}
-				<div
-					key={currentEvent + 1}
-					className={cn(
-						styles.carusel__nextEvent,
-						animation.secondary
-					)}
-				>
-					<PhotoCard {...events[treeArray().next]} />
+					{/* next */}
+					<div
+						key={currentEvent + 1}
+						className={cn(
+							styles.carusel__nextEvent,
+							animation.secondary
+						)}
+					>
+						<PhotoCard {...events[treeArray().next]} width={25} />
+					</div>
 				</div>
 			</div>
 		</div>

@@ -3,8 +3,7 @@
 	flex-direction: column;
 	justify-content: space-between;
 	position: relative;
-	width: 52rem;
-	height: 30rem;
+	aspect-ratio: 3.5 / 2;
 	border-radius: 2rem;
 	overflow: hidden;
 	padding: 1.5rem;
@@ -47,7 +46,7 @@
 	}
 
 	img {
-		object-fit: fill;
+		object-fit: cover;
 		z-index: 0;
 	}
 }

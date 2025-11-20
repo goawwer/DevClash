@@ -1,13 +1,22 @@
 .title {
 	color: var(--blue-color);
+	margin-bottom: 2rem;
 }
 
 .section {
 	margin-inline: auto;
 	width: 84%;
-	margin-top: 8rem;
+	margin-top: 4rem;
 
 	@media (max-width: 1279px) {
 		width: 100%;
 	}
+}
+
+.subText {
+	font-size: var(--mid-font-size);
+	margin-inline: auto;
+	width: fit-content;
+	font-style: italic;
+	text-align: center;
 }

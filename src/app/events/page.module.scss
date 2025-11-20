@@ -1,6 +1,10 @@
 .title {
 	color: var(--white-color);
 	margin-bottom: 3rem;
+
+	@media (max-width: 768px) {
+		margin-bottom: 1rem;
+	}
 }
 
 .subTitle {
@@ -11,6 +15,10 @@
 
 .sectionDescription {
 	margin-top: 4rem;
+
+	@media (max-width: 768px) {
+		margin-top: 0;
+	}
 }
 
 .sectionAuthors {

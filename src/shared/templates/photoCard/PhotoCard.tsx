@@ -4,6 +4,7 @@ import { FC } from "react";
 import { title } from "process";
 
 type Props = {
+	width?: number;
 	title: string;
 	started_at: string;
 	ended_at: string;
@@ -13,6 +14,7 @@ type Props = {
 };
 
 const PhotoCard: FC<Props> = ({
+	width = 52,
 	title,
 	photo_alt,
 	photo_src,
@@ -21,7 +23,7 @@ const PhotoCard: FC<Props> = ({
 	stack,
 }) => {
 	return (
-		<div className={styles.photoCard}>
+		<div className={styles.photoCard} style={{ width: `${width}rem` }}>
 			<div className={styles.photoCard__top}>
 				<p className={styles.photoCard__title}>{title}</p>
 				<p className={styles.photoCard__date}>

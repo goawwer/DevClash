@@ -4,6 +4,7 @@ import styles from "./ColorInput.module.scss";
 import cn from "classnames";
 
 type MainProps = {
+	width?: number;
 	setFormColor: (color: string) => void;
 };
 
@@ -23,7 +24,7 @@ const colorArray = [
 	"white",
 ];
 
-const ColorInput: FC<MainProps> = ({ setFormColor }) => {
+const ColorInput: FC<MainProps> = ({ setFormColor, width = 25 }) => {
 	const [currentColor, setColor] = useState<string>("white");
 
 	const setNewColor = (color: string) => {
@@ -32,7 +33,7 @@ const ColorInput: FC<MainProps> = ({ setFormColor }) => {
 	};
 
 	return (
-		<div className={styles.colorInput}>
+		<div className={styles.colorInput} style={{ width: `${width}rem` }}>
 			<p className={styles.colorInput__label}>Брендинг</p>
 			<div className={styles.colorInput__body}>
 				<p className={styles.colorInput__title}>Выберите цвет</p>
