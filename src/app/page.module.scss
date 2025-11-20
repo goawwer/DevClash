@@ -4,6 +4,10 @@
 
 .section {
 	margin-inline: auto;
-	width: 1080px;
+	width: 84%;
 	margin-top: 8rem;
+
+	@media (max-width: 1279px) {
+		width: 100%;
+	}
 }

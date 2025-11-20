@@ -1,3 +1,26 @@
+@keyframes burger {
+	from {
+		transform: scale(0.25);
+		opacity: 0;
+	}
+
+	to {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+@keyframes mobileBG {
+	from {
+		transform: scaleY(0);
+		opacity: 0;
+	}
+
+	to {
+		transform: scaleY(1);
+	}
+}
+
 .header {
 	position: sticky;
 	z-index: 10000;
@@ -17,6 +40,74 @@
 
 	ol {
 		display: flex;
-		gap: 80px;
+		gap: 5rem;
+	}
+
+	&__burgerButton {
+		display: none;
+		padding-right: 1rem;
+	}
+
+	&__burgerButtonSVG {
+		animation: forwards burger 0.2s ease-out;
+	}
+
+	&__pageList--mobile {
+		display: none;
+	}
+
+	&__mobilePagesList {
+		position: absolute;
+		right: 0rem;
+		top: 0rem;
+		z-index: -1;
+	}
+
+	&__mobileDarkBG {
+		position: absolute;
+		width: 100vw;
+		height: 100vw;
+		z-index: -2;
+		top: 0;
+		left: 0;
+	}
+
+	@media (max-width: 1024px) {
+		&__burgerButton {
+			display: inline-block;
+			padding-right: 1rem;
+		}
+
+		&__pageList--desktop,
+		&__enteryButton {
+			display: none;
+		}
+
+		&__pageList--mobile {
+			display: flex;
+			flex-direction: column;
+			align-items: end;
+			padding-inline: 2rem;
+			padding-block: 3rem;
+			padding-top: 7rem;
+			border-radius: 2rem;
+			width: fit-content;
+			height: fit-content;
+			background-color: var(--black-color);
+			opacity: 95%;
+			transform-origin: top;
+			animation: forwards mobileBG 0.2s ease-in;
+		}
+
+		ol {
+			align-items: end;
+			flex-direction: column;
+			gap: 3rem;
+			margin-bottom: 3rem;
+
+			ul {
+				width: fit-content;
+			}
+		}
 	}
 }
