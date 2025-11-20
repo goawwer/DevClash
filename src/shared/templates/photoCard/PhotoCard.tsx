@@ -1,7 +1,6 @@
 import Image from "next/image";
 import styles from "./PhotoCard.module.scss";
 import { FC } from "react";
-import { title } from "process";
 
 type Props = {
 	width?: number;

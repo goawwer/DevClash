@@ -1,6 +1,6 @@
 import GradientContainer from "@/shared/pageGradient/PageGradient";
 import styles from "./page.module.scss";
-import { AnimatedText, InfoContainer } from "./sub-components/";
+import { InfoContainer } from "./sub-components/";
 
 export default function Home() {
 	return (
