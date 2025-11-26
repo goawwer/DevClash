@@ -10,10 +10,12 @@ const Card: FC<Props> = ({ color = `blue`, children }) => {
 		<div
 			style={{
 				width: "fit-content",
+				maxWidth: "100%",
 				height: "fit-content",
 				backgroundColor: `var(--${color}-color)`,
-				padding: "24px",
-				borderRadius: "24px",
+				padding: "1.25rem",
+				borderRadius: "1.25rem",
+				
 			}}
 		>
 			{children}

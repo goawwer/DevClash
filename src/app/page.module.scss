@@ -10,10 +10,12 @@
 
 	@media (max-width: 1279px) {
 		width: 100%;
+		margin: auto;
 	}
 }
 
 .subText {
+	margin-bottom: 4rem;
 	font-size: var(--mid-font-size);
 	font-weight: var(--regular-font-weight);
 	margin-inline: auto;
