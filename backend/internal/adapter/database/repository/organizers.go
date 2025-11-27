@@ -24,10 +24,10 @@ func (r *ApplicationRepository) CreateOrganizer(ctx context.Context, a *accountm
 		}
 
 		err = tx.QueryRowxContext(ctx, `
-			INSERT INTO organizers (name)
-			VALUES ($1)
+			INSERT INTO organizers (account_id, name)
+			VALUES ($1, $2)
 			RETURNING id
-		`, org.Name).Scan(&org.ID)
+		`, a.ID, org.Name).Scan(&org.ID)
 		if err != nil {
 			return err
 		}
