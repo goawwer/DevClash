@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/users/check": {
+        "/api/check": {
             "get": {
                 "security": [
                     {
@@ -30,7 +30,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "api"
                 ],
                 "summary": "Authorized",
                 "responses": {
@@ -46,7 +46,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/logout": {
+        "/api/logout": {
             "post": {
                 "security": [
                     {
@@ -61,7 +61,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "user"
+                    "api"
                 ],
                 "summary": "Logout",
                 "responses": {
@@ -70,6 +70,43 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/current/profile": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "description": "Get current user profile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Profile",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/wrapper.CustomError"
                         }
@@ -97,7 +134,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.LoginInput"
+                            "$ref": "#/definitions/dto.LoginForm"
                         }
                     }
                 ],
@@ -113,6 +150,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/wrapper.CustomError"
                         }
@@ -146,7 +189,75 @@ const docTemplate = `{
                 }
             }
         },
-        "/auth/signup": {
+        "/auth/signup/organizer": {
+            "post": {
+                "description": "Create a new organizer account with logo upload",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Register a new organizer",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Organizer email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Organizer name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Brand color",
+                        "name": "color",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "file",
+                        "description": "Organizer logo",
+                        "name": "logo",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/signup/user": {
             "post": {
                 "description": "Creates a user in database",
                 "consumes": [
@@ -158,15 +269,15 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Sign Up",
+                "summary": "Sign Up User",
                 "parameters": [
                     {
-                        "description": "Login credentials",
+                        "description": "Signup credentials",
                         "name": "credentials",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.SignUpInput"
+                            "$ref": "#/definitions/dto.SignUpForm"
                         }
                     }
                 ],
@@ -191,7 +302,7 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "dto.LoginInput": {
+        "dto.LoginForm": {
             "type": "object",
             "properties": {
                 "email": {
@@ -202,10 +313,13 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.SignUpInput": {
+        "dto.SignUpForm": {
             "type": "object",
             "properties": {
                 "email": {
+                    "type": "string"
+                },
+                "name": {
                     "type": "string"
                 },
                 "password": {

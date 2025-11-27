@@ -1,49 +1,29 @@
 package user
 
 import (
-	"net/http"
-
 	"github.com/goawwer/devclash/internal/controller/wrapper"
 	"github.com/goawwer/devclash/middleware"
 )
 
-// @Summary      Authorized
-// @Description  Check current state of authorization
+// @Summary      Profile
+// @Description  Get current user profile
 // @Tags         user
 // @Accept       json
 // @Produce      json
 // @Success      200
 // @Security     CookieAuth
+// @Failure      500          {object} wrapper.CustomError
 // @Failure      401          {object} wrapper.CustomError
-// @Router       /api/users/check [get]
-func (h *UserHandler) Check(_ *wrapper.Wrapper, _ *middleware.CustomClaims) (any, error) {
-	return nil, nil
-}
+// @Router       /api/users/current/profile [post]
+func (h *UserHandler) GetCurrentUserProfile(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+	u, err := h.GetUserProfileByID(w.Request().Context(), c.AccountID)
 
-// @Summary      Logout
-// @Description  Refreshes TokenPair and check refresh token is consumed or not
-// @Tags         user
-// @Accept       json
-// @Produce      json
-// @Success      200
-// @Security     CookieAuth
-// @Failure      401          {object} wrapper.CustomError
-// @Router       /api/users/logout [post]
-func (h *UserHandler) Logout(w *wrapper.Wrapper, _ *middleware.CustomClaims) (any, error) {
-	http.SetCookie(w.Writer(), &http.Cookie{
-		Name:     "access",
-		Value:    "",
-		Path:     "/",
-		MaxAge:   -1,
-		HttpOnly: true,
-	})
-	http.SetCookie(w.Writer(), &http.Cookie{
-		Name:     "refresh",
-		Value:    "",
-		Path:     "/",
-		MaxAge:   -1,
-		HttpOnly: true,
-	})
-
-	return nil, nil
+	return UserProfile{
+		Username:            u.Username,
+		ProfilePictureURL:   u.ProfilePictureURL,
+		Bio:                 u.Bio,
+		ProfileStatus:       u.ProfileStatus,
+		ParticipationsCount: u.ParticipationsCount,
+		WinsCount:           u.WinsCount,
+	}, err
 }

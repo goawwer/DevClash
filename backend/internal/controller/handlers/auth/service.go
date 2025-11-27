@@ -1,28 +1,19 @@
 package auth
 
 import (
-	"github.com/go-chi/chi/v5"
-	"github.com/goawwer/devclash/internal/controller/wrapper"
-	"github.com/goawwer/devclash/internal/usecase"
-	"github.com/goawwer/devclash/internal/usecase/auth"
+	"context"
+	"fmt"
+	"mime/multipart"
+	"path/filepath"
+	"time"
+
+	"github.com/goawwer/devclash/pkg/s3"
 )
 
-type AuthHandler struct {
-	*auth.AuthUsecase
-}
+func saveLogoAtServer(ctx context.Context, f multipart.File, h *multipart.FileHeader, orgName string) (string, error) {
+	defer f.Close()
 
-func handler(a *auth.AuthUsecase) *AuthHandler {
-	return &AuthHandler{a}
-}
+	filename := fmt.Sprintf("%s-%d%s", orgName, time.Now().Unix(), filepath.Ext(h.Filename))
 
-func New(usecase *usecase.AppUsecase) *chi.Mux {
-	r := chi.NewRouter()
-
-	h := handler(usecase.Auth)
-
-	r.Post("/signup", wrapper.PublicWrap(h.SignUp))
-	r.Post("/login", wrapper.PublicWrap(h.Login))
-	r.Post("/refresh", wrapper.PublicWrap(h.Refresh))
-
-	return r
+	return s3.Upload(ctx, "logos", filename, f, h.Size, h.Header.Get("Content-Type"))
 }

@@ -1,15 +1,17 @@
 basePath: /
 definitions:
-  dto.LoginInput:
+  dto.LoginForm:
     properties:
       email:
         type: string
       password:
         type: string
     type: object
-  dto.SignUpInput:
+  dto.SignUpForm:
     properties:
       email:
+        type: string
+      name:
         type: string
       password:
         type: string
@@ -29,7 +31,7 @@ info:
   title: Dev clash API
   version: "1.0"
 paths:
-  /api/users/check:
+  /api/check:
     get:
       consumes:
       - application/json
@@ -47,8 +49,8 @@ paths:
       - CookieAuth: []
       summary: Authorized
       tags:
-      - user
-  /api/users/logout:
+      - api
+  /api/logout:
     post:
       consumes:
       - application/json
@@ -66,6 +68,29 @@ paths:
       - CookieAuth: []
       summary: Logout
       tags:
+      - api
+  /api/users/current/profile:
+    post:
+      consumes:
+      - application/json
+      description: Get current user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Profile
+      tags:
       - user
   /auth/login:
     post:
@@ -78,7 +103,7 @@ paths:
         name: credentials
         required: true
         schema:
-          $ref: '#/definitions/dto.LoginInput'
+          $ref: '#/definitions/dto.LoginForm'
       produces:
       - application/json
       responses:
@@ -90,6 +115,10 @@ paths:
             $ref: '#/definitions/wrapper.CustomError'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/wrapper.CustomError'
       summary: Login
@@ -112,18 +141,36 @@ paths:
       summary: Refresh
       tags:
       - auth
-  /auth/signup:
+  /auth/signup/organizer:
     post:
       consumes:
-      - application/json
-      description: Creates a user in database
+      - multipart/form-data
+      description: Create a new organizer account with logo upload
       parameters:
-      - description: Login credentials
-        in: body
-        name: credentials
+      - description: Organizer email
+        in: formData
+        name: email
         required: true
-        schema:
-          $ref: '#/definitions/dto.SignUpInput'
+        type: string
+      - description: Organizer name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Brand color
+        in: formData
+        name: color
+        required: true
+        type: string
+      - description: Organizer logo
+        in: formData
+        name: logo
+        type: file
       produces:
       - application/json
       responses:
@@ -137,7 +184,35 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/wrapper.CustomError'
-      summary: Sign Up
+      summary: Register a new organizer
+      tags:
+      - auth
+  /auth/signup/user:
+    post:
+      consumes:
+      - application/json
+      description: Creates a user in database
+      parameters:
+      - description: Signup credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SignUpForm'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      summary: Sign Up User
       tags:
       - auth
 securityDefinitions:

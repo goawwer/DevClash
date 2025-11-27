@@ -3,7 +3,9 @@ package logger
 import (
 	"context"
 	"fmt"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -83,4 +85,20 @@ func (h *fileHook) Fire(entry *logrus.Entry) error {
 
 func (h *fileHook) Levels() []logrus.Level {
 	return logrus.AllLevels
+}
+
+func ChiLogger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		next.ServeHTTP(w, r)
+
+		logger.Info(
+			r.Method,
+			" ",
+			r.URL.Path,
+			" ",
+			time.Since(start),
+		)
+	})
 }
