@@ -28,16 +28,16 @@ func InitAuthConfig(key string, r databaseIntegration) {
 	auth = &Config{key, r}
 }
 
-func GenerateTokenPair(ctx context.Context, userID uuid.UUID, isAdmin bool) (*TokenPair, error) {
+func GenerateTokenPair(ctx context.Context, accountID uuid.UUID, role string) (*TokenPair, error) {
 	now := time.Now()
 
 	accessExp := now.Add(time.Minute * 5)
 	refreshExp := now.Add(time.Hour * 24 * 1)
 
 	accessClaims := CustomClaims{
-		UserID:    userID,
+		AccountID: accountID,
+		Role:      role,
 		TokenType: "access",
-		IsAdmin:   isAdmin,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(accessExp),
 			IssuedAt:  jwt.NewNumericDate(now),
@@ -54,9 +54,9 @@ func GenerateTokenPair(ctx context.Context, userID uuid.UUID, isAdmin bool) (*To
 
 	refreshID := uuid.New()
 	refreshClaims := CustomClaims{
-		UserID:    userID,
+		AccountID: accountID,
+		Role:      role,
 		TokenType: "refresh",
-		IsAdmin:   isAdmin,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(refreshExp),
 			IssuedAt:  jwt.NewNumericDate(now),
@@ -77,7 +77,7 @@ func GenerateTokenPair(ctx context.Context, userID uuid.UUID, isAdmin bool) (*To
 
 	err = auth.Repository.StoreRefreshToken(ctx, dto.RefreshTokenRecord{
 		ID:        refreshID,
-		UserID:    userID,
+		AccountID: accountID,
 		TokenHash: tokenHash,
 		ExpiresAt: refreshExp,
 	})
@@ -127,7 +127,7 @@ func Middleware(next http.Handler) http.Handler {
 		claims, err := ParseToken(cookie.Value)
 		if err != nil {
 			if errors.Is(err, ErrExpiredToken) {
-				logger.Info("access token expired for user:", claims.UserID)
+				logger.Info("access token expired:", claims.AccountID)
 			} else {
 				logger.Error("invalid access token:", err)
 			}
@@ -171,7 +171,7 @@ func RefreshToken(r *http.Request) (*TokenPair, error) {
 	ok, _, err := auth.Repository.ConsumeRefreshToken(
 		r.Context(),
 		uuid.MustParse(refreshID),
-		claims.UserID,
+		claims.AccountID,
 		tokenHash,
 	)
 	if err != nil {
@@ -183,7 +183,7 @@ func RefreshToken(r *http.Request) (*TokenPair, error) {
 		return nil, ErrReusedRefreshToken
 	}
 
-	pair, err := GenerateTokenPair(r.Context(), claims.UserID, claims.IsAdmin)
+	pair, err := GenerateTokenPair(r.Context(), claims.AccountID, claims.Role)
 	if err != nil {
 		logger.Error("failed to generate token pair: ", err)
 		return nil, err

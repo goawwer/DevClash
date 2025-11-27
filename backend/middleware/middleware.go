@@ -11,7 +11,7 @@ import (
 
 type databaseIntegration interface {
 	StoreRefreshToken(ctx context.Context, rec dto.RefreshTokenRecord) error
-	ConsumeRefreshToken(ctx context.Context, id uuid.UUID, userID uuid.UUID, providedHash string) (bool, uuid.UUID, error)
+	ConsumeRefreshToken(ctx context.Context, id uuid.UUID, accountID uuid.UUID, providedHash string) (bool, uuid.UUID, error)
 	CleanupExpiredRefreshTokens(ctx context.Context) error
 }
 
@@ -28,8 +28,8 @@ type TokenPair struct {
 }
 
 type CustomClaims struct {
-	UserID    uuid.UUID `json:"user_id"`
-	IsAdmin   bool      `json:"is_admin"`
+	AccountID uuid.UUID `json:"account_id"`
+	Role      string    `json:"role"`
 	TokenType string    `json:"token_type"`
 	jwt.RegisteredClaims
 }
