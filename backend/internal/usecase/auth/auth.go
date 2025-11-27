@@ -3,12 +3,15 @@ package auth
 import (
 	"context"
 
-	"github.com/goawwer/devclash/internal/domain/usermodel"
+	accountmodel "github.com/goawwer/devclash/internal/domain/account_model"
+	organizermodel "github.com/goawwer/devclash/internal/domain/organizer_model"
+	usermodel "github.com/goawwer/devclash/internal/domain/user_model"
 )
 
 type AuthRepository interface {
-	Create(ctx context.Context, Auth *usermodel.User) error
-	GetUserByEmail(ctx context.Context, email string) (*usermodel.User, error)
+	CreateUser(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error
+	CreateOrganizer(ctx context.Context, a *accountmodel.Account, org *organizermodel.OrganizerAccount) error
+	GetAccountByEmail(ctx context.Context, email string) (*accountmodel.Account, error)
 }
 
 type AuthUsecase struct {

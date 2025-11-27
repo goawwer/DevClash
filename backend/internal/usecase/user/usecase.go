@@ -3,11 +3,12 @@ package user
 import (
 	"context"
 
-	"github.com/goawwer/devclash/internal/domain/usermodel"
+	usermodel "github.com/goawwer/devclash/internal/domain/user_model"
+	"github.com/google/uuid"
 )
 
 type UserRepository interface {
-	GetUserByEmail(ctx context.Context, email string) (*usermodel.User, error)
+	GetUserProfileByID(ctx context.Context, id uuid.UUID) (*usermodel.User, error)
 }
 
 type UserUsecase struct {

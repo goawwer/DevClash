@@ -2,46 +2,91 @@ package auth
 
 import (
 	"context"
-	"fmt"
 	"time"
 
-	"github.com/goawwer/devclash/internal/domain/usermodel"
+	"github.com/goawwer/devclash/internal/domain"
+	accountmodel "github.com/goawwer/devclash/internal/domain/account_model"
+	organizermodel "github.com/goawwer/devclash/internal/domain/organizer_model"
+	usermodel "github.com/goawwer/devclash/internal/domain/user_model"
 	"github.com/goawwer/devclash/internal/dto"
+	"github.com/goawwer/devclash/pkg/logger"
+	"github.com/goawwer/devclash/pkg/mail"
 	"github.com/goawwer/devclash/utils"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func (a *AuthUsecase) SignUp(ctx context.Context, input dto.SignUpInput) error {
+func (a *AuthUsecase) SignUpUser(ctx context.Context, input dto.SignUpForm) error {
+	if err := domain.Validate(dto.SignUpForm{
+		Email:    input.Email,
+		Username: input.Username,
+		Password: input.Password,
+	}); err != nil {
+		return err
+	}
+
 	hashedPassword, err := utils.CreateHashPassword(input.Password)
 	if err != nil {
 		return err
 	}
 
-	user := &usermodel.User{
+	account := &accountmodel.Account{
 		Email:          input.Email,
-		Username:       input.Email,
+		Role:           "user",
 		HashedPassword: hashedPassword,
 		CreatedAt:      time.Now(),
 	}
 
-	if err := usermodel.Validate(user); err != nil {
+	user := &usermodel.User{
+		Username: input.Username,
+	}
+
+	return a.r.CreateUser(ctx, account, user)
+}
+
+func (a *AuthUsecase) Login(ctx context.Context, input dto.LoginForm) (uuid.UUID, string, error) {
+	account, err := a.r.GetAccountByEmail(ctx, input.Email)
+	if err != nil {
+		return uuid.Nil, "", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(account.HashedPassword), []byte(input.Password))
+	if err != nil {
+		return uuid.Nil, "", err
+	}
+
+	return account.ID, account.Role, nil
+}
+
+func (a *AuthUsecase) SignUpOrganizer(ctx context.Context, input dto.SignUpInputOrganizerDetails) error {
+	hashedPassword, err := utils.CreateHashPassword(input.Password)
+	if err != nil {
 		return err
 	}
 
-	return a.r.Create(ctx, user)
-}
-
-func (a *AuthUsecase) Login(ctx context.Context, input dto.LoginInput) (uuid.UUID, bool, error) {
-	u, err := a.r.GetUserByEmail(ctx, input.Email)
-	if err != nil {
-		return uuid.Nil, false, err
+	account := &accountmodel.Account{
+		Email:          input.Email,
+		HashedPassword: hashedPassword,
+		Role:           "organizer",
+		CreatedAt:      time.Now(),
 	}
 
-	err = bcrypt.CompareHashAndPassword([]byte(u.HashedPassword), []byte(input.Password))
-	if err != nil {
-		return uuid.Nil, false, fmt.Errorf("invalid credentials: %w", err)
+	organizerID := uuid.New()
+
+	organizer := &organizermodel.OrganizerAccount{
+		ID:   organizerID,
+		Name: input.Name,
+		Details: &organizermodel.Details{
+			OrganizerID: organizerID,
+			LogoURL:     &input.LogoURL,
+			Color:       &input.Color,
+		},
 	}
 
-	return u.ID, u.IsAdmin, nil
+	if err := mail.OrganizerSignupInfo(account, organizer); err != nil {
+		logger.Error("failed to send organizer signup email: ", err)
+		return err
+	}
+
+	return a.r.CreateOrganizer(ctx, account, organizer)
 }
