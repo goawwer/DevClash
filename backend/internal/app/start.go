@@ -13,11 +13,13 @@ import (
 	"github.com/goawwer/devclash/config"
 	"github.com/goawwer/devclash/internal/adapter/database"
 	"github.com/goawwer/devclash/internal/adapter/database/repository"
-	"github.com/goawwer/devclash/internal/adapter/storage"
+	"github.com/goawwer/devclash/internal/adapter/redis"
 	"github.com/goawwer/devclash/internal/controller"
 	"github.com/goawwer/devclash/internal/usecase"
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
+	"github.com/goawwer/devclash/pkg/mail"
+	"github.com/goawwer/devclash/pkg/s3"
 	"github.com/goawwer/devclash/pkg/server"
 	"github.com/sirupsen/logrus"
 )
@@ -26,7 +28,7 @@ func Start(ctx context.Context, cfg *config.Config) {
 	logger.Info("starting application")
 
 	if err := database.Init(ctx, &cfg.Database); err != nil {
-		logger.Error("failed to initialize database in start function: ", err)
+		logger.Fatal("failed to initialize database in start function: ", err)
 	}
 
 	logger.WithFields(logrus.Fields{
@@ -40,8 +42,16 @@ func Start(ctx context.Context, cfg *config.Config) {
 		}
 	}()
 
+	logger.Info("initialize s3 storage")
+	if err := s3.Init(&cfg.S3); err != nil {
+		logger.Fatal("failed to initialize s3 storage: ", err)
+	}
+
+	logger.Info("initialize mail dealer")
+	mail.Init(&cfg.Mail)
+
 	logger.Info("initialize redis")
-	if err := storage.Init(ctx, &cfg.Storage); err != nil {
+	if err := redis.Init(ctx, &cfg.Storage); err != nil {
 		logger.Error("cannot initialize redis: ", err)
 	}
 
