@@ -13,35 +13,33 @@ import (
 
 type AuthRepository interface {
 	StoreRefreshToken(ctx context.Context, rec dto.RefreshTokenRecord) error
-	ConsumeRefreshToken(ctx context.Context, id uuid.UUID, userID uuid.UUID, providedHash string) (bool, uuid.UUID, error)
+	ConsumeRefreshToken(ctx context.Context, id uuid.UUID, accountID uuid.UUID, providedHash string) (bool, uuid.UUID, error)
 	CleanupExpiredRefreshTokens(ctx context.Context) error
 }
 
-func (r *ApplicationRepository) existsUserByID(ctx context.Context, id uuid.UUID) (bool, error) {
+func (r *ApplicationRepository) existsAccountByID(ctx context.Context, id uuid.UUID) (bool, error) {
 	var exists bool
-	err := r.GetContext(ctx, &exists, `SELECT EXISTS(SELECT 1 FROM users WHERE id = $1)`, id)
+	err := r.GetContext(ctx, &exists, `SELECT EXISTS(SELECT 1 FROM accounts WHERE id = $1)`, id)
 	return exists, err
 }
 
 func (r *ApplicationRepository) StoreRefreshToken(ctx context.Context, rec dto.RefreshTokenRecord) error {
-	q := `
-		INSERT INTO refresh_tokens (id, user_id, token_hash, expires_at)
-			VALUES ($1, $2, $3, $4)
-	`
-
-	_, err := r.ExecContext(ctx, q, rec.ID, rec.UserID, string(rec.TokenHash), rec.ExpiresAt)
+	_, err := r.ExecContext(ctx, `
+		INSERT INTO refresh_tokens (id, account_id, token_hash, expires_at)
+		VALUES ($1, $2, $3, $4)
+	`, rec.ID, rec.AccountID, string(rec.TokenHash), rec.ExpiresAt)
 
 	return err
 }
 
-func (r *ApplicationRepository) ConsumeRefreshToken(ctx context.Context, id uuid.UUID, userID uuid.UUID, providedHash string) (bool, uuid.UUID, error) {
+func (r *ApplicationRepository) ConsumeRefreshToken(ctx context.Context, id uuid.UUID, accountID uuid.UUID, providedHash string) (bool, uuid.UUID, error) {
 	var (
 		storedHash []byte
 		consumedAt *time.Time
 		expiresAt  time.Time
 	)
 
-	exists, err := r.existsUserByID(ctx, userID)
+	exists, err := r.existsAccountByID(ctx, accountID)
 	if err != nil {
 		return false, uuid.Nil, err
 	}
@@ -57,9 +55,9 @@ func (r *ApplicationRepository) ConsumeRefreshToken(ctx context.Context, id uuid
 	defer r.MustBegin().Rollback()
 
 	err = tx.QueryRowContext(ctx, `
-		SELECT user_id, token_hash, consumed_at, expires_at FROM refresh_tokens
-			WHERE id = $1 FOR UPDATE
-	`, id).Scan(&userID, &storedHash, &consumedAt, &expiresAt)
+		SELECT account_id, token_hash, consumed_at, expires_at FROM refresh_tokens
+		WHERE id = $1 FOR UPDATE
+	`, id).Scan(&accountID, &storedHash, &consumedAt, &expiresAt)
 
 	if errors.Is(err, sql.ErrNoRows) {
 		return false, uuid.Nil, nil
@@ -76,7 +74,7 @@ func (r *ApplicationRepository) ConsumeRefreshToken(ctx context.Context, id uuid
 
 	// if refresh token has been already used / expired
 	if consumedAt != nil || time.Now().After(expiresAt) {
-		return false, userID, nil
+		return false, accountID, nil
 	}
 
 	// mark consumed
@@ -92,7 +90,7 @@ func (r *ApplicationRepository) ConsumeRefreshToken(ctx context.Context, id uuid
 		return false, uuid.Nil, err
 	}
 
-	return true, userID, nil
+	return true, accountID, nil
 }
 
 func (r *ApplicationRepository) CleanupExpiredRefreshTokens(ctx context.Context) error {

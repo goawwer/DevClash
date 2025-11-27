@@ -5,17 +5,17 @@ import (
 	"testing"
 	"time"
 
-	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
-	_ "github.com/lib/pq"
-
 	"github.com/goawwer/devclash/internal/adapter/database"
 	"github.com/goawwer/devclash/internal/adapter/database/repository"
-	"github.com/goawwer/devclash/internal/domain/usermodel"
+	accountmodel "github.com/goawwer/devclash/internal/domain/account_model"
+	usermodel "github.com/goawwer/devclash/internal/domain/user_model"
 	"github.com/goawwer/devclash/pkg/testenv"
 	"github.com/goawwer/devclash/utils"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/google/uuid"
+	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/require"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func TestUserRepository(t *testing.T) {
@@ -33,27 +33,22 @@ func TestUserRepository(t *testing.T) {
 	hashPass, err := utils.CreateHashPassword("password")
 	require.NoError(t, err)
 
-	u := &usermodel.User{
+	a := &accountmodel.Account{
+		ID:             uuid.New(),
 		Email:          "test@test.com",
-		Username:       "testUser",
+		Role:           "user",
 		HashedPassword: hashPass,
 		CreatedAt:      time.Now(),
 	}
 
-	create(t, ctx, r, u)
-	getByEmail(t, ctx, r, u.Email)
+	u := &usermodel.User{
+		AccountID: a.ID,
+		Username:  "testUser",
+	}
+
+	create(t, ctx, r, u, a)
 }
 
-func create(t *testing.T, ctx context.Context, r repository.Repository, u *usermodel.User) {
-	require.NoError(t, r.Create(ctx, u))
-}
-
-func getByEmail(t *testing.T, ctx context.Context, r repository.Repository, email string) {
-	user, err := r.GetUserByEmail(ctx, email)
-	require.NoError(t, err)
-
-	require.Equal(t, "test@test.com", user.Email)
-
-	err = bcrypt.CompareHashAndPassword([]byte(user.HashedPassword), []byte("password"))
-	require.NoError(t, err)
+func create(t *testing.T, ctx context.Context, r repository.Repository, u *usermodel.User, a *accountmodel.Account) {
+	require.NoError(t, r.CreateUser(ctx, a, u))
 }
