@@ -5,17 +5,21 @@ import (
 
 	"github.com/caarlos0/env/v11"
 	"github.com/goawwer/devclash/internal/adapter/database"
-	"github.com/goawwer/devclash/internal/adapter/storage"
+	"github.com/goawwer/devclash/internal/adapter/redis"
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
+	"github.com/goawwer/devclash/pkg/mail"
+	"github.com/goawwer/devclash/pkg/s3"
 	"github.com/goawwer/devclash/pkg/server"
 )
 
 type Config struct {
 	Database database.Config
+	S3       s3.Config
 	Server   server.Config
+	Mail     mail.Config
 	JWT      middleware.Config
-	Storage  storage.Config
+	Storage  redis.Config
 	Logger   logger.Config
 }
 
