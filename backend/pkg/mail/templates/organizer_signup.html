@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение организации на dev-clash.com</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9fb;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            color: #1a1a1a;
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        p {
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        a {
+            color: #5d5feF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .highlight {
+            background: #f0f2ff;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #5d5feF;
+            margin: 24px 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #5d5feF;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">dev clash</div>
+
+        <h1>Приветствуем вас на dev-clash.com!</h1>
+
+        <p>Вы успешно зарегистрировали организацию <strong>{{ .Name }}</strong> как организатора соревнований. Остался
+            всего один шаг до полного доступа ко всем возможностям платформы.</p>
+
+        <div class="highlight">
+            <p><strong>Нам нужно подтвердить, что ваша организация реальная.</strong><br>
+                Это важно для безопасности участников и честности соревнований.</p>
+        </div>
+
+        <p>Пожалуйста, отправьте на <a href="mailto:support@dev-clash.com">support@dev-clash.com</a> один из следующих
+            документов:</p>
+
+        <ul>
+            <li>Выписку из ЕГРЮЛ/ЕГРИП (не старше 30 дней)</li>
+            <li>Свидетельство о регистрации (скан или фото)</li>
+            <li>Или любой официальный документ, подтверждающий существование организации</li>
+        </ul>
+
+        <p>Проверка занимает <strong>обычно 10–15 минут</strong> в рабочее время. Как только мы всё подтвердим — в вашем
+            профиле появится отметка «Подтверждённая организация», и вы сможете создавать соревнования без ограничений.
+        </p>
+
+        <p>Мы очень ценим, что вы с нами, и делаем всё, чтобы платформа оставалась безопасным и честным местом для
+            разработчиков.</p>
+
+        <p>Если возникнут вопросы — пишите прямо в ответ на это письмо, мы всегда на связи.</p>
+
+        <div class="footer">
+            Команда <strong>dev clash</strong>
+        </div>
+    </div>
+</body>
+
+</html>
