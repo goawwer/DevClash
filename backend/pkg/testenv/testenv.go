@@ -32,6 +32,9 @@ func NewTestEnv(ctx context.Context, t *testing.T) *TestEnv {
 	err = database.Init(ctx, &cfg.Database)
 	require.NoError(t, err)
 
+	err = logger.Init(ctx, &cfg.Logger)
+	require.NoError(t, err)
+
 	return &TestEnv{
 		Db:     database.Get(),
 		Config: cfg,
