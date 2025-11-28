@@ -6,6 +6,7 @@ import { NavLink } from "@/shared/ui/";
 import { Logo } from "@/shared/ui";
 import { useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
+import Link from "next/link";
 
 export default function HeaderUnauth() {
 	const [open, setOpen] = useState(false);
@@ -13,7 +14,9 @@ export default function HeaderUnauth() {
 		<header className={styles.header}>
 			<nav>
 				<div className={styles.header__logo}>
-					<Logo fontSize={2} />
+					<Link href="/">
+						<Logo fontSize={2} />
+					</Link>
 				</div>
 
 				<div className={styles[`header__pageList--desktop`]}>

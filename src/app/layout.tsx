@@ -3,6 +3,11 @@ import styles from "./layout.module.scss";
 import "./globals.css";
 import HeaderUnauth from "@/widgets/header/HeaderUnauth";
 import Footer from "@/widgets/footer/Footer";
+import { devClashMetadata } from "./metadata";
+
+export const metadata = {
+  ...devClashMetadata,
+};
 
 export default function RootLayout({
 	children,

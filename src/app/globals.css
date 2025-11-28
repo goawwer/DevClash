@@ -52,6 +52,16 @@ body {
 	color: var(--white-color);
 }
 
+a {
+	color: var(--white-color);
+	transition: 0.25s all 0.05s ease;
+}
+
+a:hover,  a:focus-visible {
+	filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+}
+
+
 h1,
 h2,
 h3 {
