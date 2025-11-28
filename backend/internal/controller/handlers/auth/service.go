@@ -15,5 +15,12 @@ func saveLogoAtServer(ctx context.Context, f multipart.File, h *multipart.FileHe
 
 	filename := fmt.Sprintf("%s-%d%s", orgName, time.Now().Unix(), filepath.Ext(h.Filename))
 
-	return s3.Upload(ctx, "logos", filename, f, h.Size, h.Header.Get("Content-Type"))
+	return s3.Upload(&s3.S3UploadFileParameters{
+		Ctx:         ctx,
+		Prefix:      "logos",
+		Filename:    filename,
+		Reader:      f,
+		Size:        h.Size,
+		ContentType: h.Header.Get("Content-Type"),
+	})
 }

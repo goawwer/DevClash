@@ -1,9 +1,6 @@
 package s3
 
 import (
-	"context"
-	"io"
-
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
@@ -26,7 +23,7 @@ var s3 *S3Storage
 func Init(cfg *Config) error {
 	c, err := minio.New(cfg.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(cfg.AccessKeyID, cfg.PrivateAccessKey, ""),
-		Secure: true,
+		Secure: false,
 	})
 	if err != nil {
 		return err
@@ -40,15 +37,21 @@ func Init(cfg *Config) error {
 	return nil
 }
 
-func Upload(ctx context.Context, prefix string, filename string, r io.Reader, size int64, contentType string) (string, error) {
-	key := prefix + "/" + filename
+func Upload(p *S3UploadFileParameters) (string, error) {
+	key := p.Prefix + "/" + p.Filename
 
-	_, err := s3.client.PutObject(ctx, s3.bucketName, key, r, size, minio.PutObjectOptions{
-		ContentType: contentType,
+	_, err := s3.client.PutObject(p.Ctx, s3.bucketName, key, p.Reader, p.Size, minio.PutObjectOptions{
+		ContentType: p.ContentType,
 	})
+
 	if err != nil {
 		return "", err
 	}
 
 	return key, nil
+}
+
+func PresignKey(p *S3GetFileParameters) (string, error) {
+	presignedURL, err := s3.client.PresignedGetObject(p.Ctx, s3.bucketName, p.FileName, p.Expires, nil)
+	return presignedURL.String(), err
 }

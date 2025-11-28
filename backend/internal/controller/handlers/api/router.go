@@ -13,15 +13,13 @@ func New(u *usecase.AppUsecase) *chi.Mux {
 
 	r.Use(middleware.Middleware)
 
-	// api authorized logic
+	// api generic logic
 	r.Group(func(r chi.Router) {
-		r.Get("/check", wrapper.AuthWrap(Check))
 		r.Post("/logout", wrapper.AuthWrap(Logout))
+		r.Get("/image", wrapper.AuthWrap(GetS3Url))
 	})
 
-	userHandler := userHandler.New(u.User)
-
-	r.Mount("/users", userHandler)
+	r.Mount("/users", userHandler.New(u.User))
 
 	return r
 }
