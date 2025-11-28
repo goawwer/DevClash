@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/go-chi/chi/v5"
+	orgHandler "github.com/goawwer/devclash/internal/controller/handlers/api/organizer"
 	userHandler "github.com/goawwer/devclash/internal/controller/handlers/api/user"
 	"github.com/goawwer/devclash/internal/controller/wrapper"
 	"github.com/goawwer/devclash/internal/usecase"
@@ -20,6 +21,7 @@ func New(u *usecase.AppUsecase) *chi.Mux {
 	})
 
 	r.Mount("/users", userHandler.New(u.User))
+	r.Mount("/organizers", orgHandler.New(u.Org))
 
 	return r
 }

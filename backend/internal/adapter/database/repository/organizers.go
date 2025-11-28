@@ -5,11 +5,13 @@ import (
 
 	accountmodel "github.com/goawwer/devclash/internal/domain/account_model"
 	organizermodel "github.com/goawwer/devclash/internal/domain/organizer_model"
+	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
 type OrganizerRepository interface {
 	CreateOrganizer(ctx context.Context, a *accountmodel.Account, org *organizermodel.OrganizerAccount) error
+	GetOrganizerDetailsByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error)
 }
 
 func (r *ApplicationRepository) CreateOrganizer(ctx context.Context, a *accountmodel.Account, org *organizermodel.OrganizerAccount) error {
@@ -40,4 +42,13 @@ func (r *ApplicationRepository) CreateOrganizer(ctx context.Context, a *accountm
 		return err
 	})
 
+}
+
+func (r *ApplicationRepository) GetOrganizerDetailsByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error) {
+	var details organizermodel.Details
+
+	return &details, r.GetContext(ctx, &details, `
+		SELECT org_d.company_description, org_d.logo_url, org_d.brand_color FROM organizers_details org_d
+		WHERE organizer_id = $1 
+	`, orgID)
 }
