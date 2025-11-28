@@ -35,6 +35,10 @@ func (w *Wrapper) Param(key string) string {
 	return chi.URLParam(w.r, key)
 }
 
+func (w *Wrapper) Query(key string) string {
+	return w.r.URL.Query().Get(key)
+}
+
 func (w *Wrapper) claims() (*middleware.CustomClaims, error) {
 	claims, ok := w.r.Context().Value(middleware.ClaimsKey).(*middleware.CustomClaims)
 	if !ok {
