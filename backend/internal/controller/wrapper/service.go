@@ -1,6 +1,8 @@
 package wrapper
 
 import (
+	"database/sql"
+	"errors"
 	"net/http"
 
 	"github.com/goawwer/devclash/middleware"
@@ -49,6 +51,11 @@ func AuthWrap(handler AuthHandler) http.HandlerFunc {
 
 		res, err := handler(wrapper, claims)
 		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				wrapper.Error(NewError("not found", http.StatusBadRequest))
+				return
+			}
+
 			wrapper.Error(err)
 			return
 		}
