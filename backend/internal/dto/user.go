@@ -9,3 +9,12 @@ type UserProfile struct {
 	WinsCount           int       `db:"wins_count" json:"wins_count"`
 	TechStack           *[]string `db:"tech_stack" json:"tech_stack"`
 }
+
+type UserProfileSettings struct {
+	Username          string    `db:"username" json:"username"`
+	Email             string    `db:"email" json:"email"`
+	Bio               *string   `db:"bio" json:"bio"`
+	ProfileStatus     *string   `db:"profile_status" json:"profile_status"`
+	TechStack         *[]string `db:"tech_stack" json:"tech_stack"`
+	ProfilePictureURL *string   `db:"profile_picture_url" json:"profile_picture_url"`
+}

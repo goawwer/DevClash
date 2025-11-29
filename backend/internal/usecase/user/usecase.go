@@ -9,6 +9,7 @@ import (
 
 type UserRepository interface {
 	GetUserProfileByID(ctx context.Context, id uuid.UUID) (*dto.UserProfile, error)
+	GetUserSettingsByID(ctx context.Context, id uuid.UUID) (*dto.UserProfileSettings, error)
 }
 
 type UserUsecase struct {

@@ -18,6 +18,7 @@ var (
 type UserRepository interface {
 	CreateUser(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error
 	GetUserProfileByID(ctx context.Context, id uuid.UUID) (*dto.UserProfile, error)
+	GetUserSettingsByID(ctx context.Context, id uuid.UUID) (*dto.UserProfileSettings, error)
 }
 
 func (r *ApplicationRepository) CreateUser(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error {
@@ -53,5 +54,21 @@ func (r *ApplicationRepository) GetUserProfileByID(ctx context.Context, id uuid.
 			LEFT JOIN technologies t ON us.technology_id = t.id
 		WHERE account_id = $1
 		GROUP BY u.id
+	`, id)
+}
+
+func (r *ApplicationRepository) GetUserSettingsByID(ctx context.Context, id uuid.UUID) (*dto.UserProfileSettings, error) {
+	var p dto.UserProfileSettings
+
+	return &p, r.GetContext(ctx, &p, `
+		SELECT 
+			a.email, u.username, u.profile_picture_url, u.bio, u.profile_status,
+			ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS tech_stack
+		FROM accounts a
+			JOIN users u ON a.id = u.account_id
+			LEFT JOIN users_skills us ON u.id = us.user_id
+			LEFT JOIN technologies t ON us.technology_id = t.id
+		WHERE account_id = $1
+		GROUP BY u.id, a.email
 	`, id)
 }

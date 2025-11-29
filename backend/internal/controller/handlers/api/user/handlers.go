@@ -18,3 +18,17 @@ import (
 func (h *UserHandler) GetCurrentUserProfile(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	return h.GetUserProfileByID(w.Request().Context(), c.AccountID)
 }
+
+// @Summary      Profile settings
+// @Description  Get current user profile settings
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Success      200
+// @Security     CookieAuth
+// @Failure      500          {object} wrapper.CustomError
+// @Failure      401          {object} wrapper.CustomError
+// @Router       /api/users/current/profile [post]
+func (h *UserHandler) GetCurrentUserSettings(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+	return h.GetUserSettingsByID(w.Request().Context(), c.AccountID)
+}
