@@ -6,6 +6,7 @@ import (
 
 	accountmodel "github.com/goawwer/devclash/internal/domain/account_model"
 	usermodel "github.com/goawwer/devclash/internal/domain/user_model"
+	"github.com/goawwer/devclash/internal/dto"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
@@ -16,7 +17,7 @@ var (
 
 type UserRepository interface {
 	CreateUser(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error
-	GetUserProfileByID(ctx context.Context, id uuid.UUID) (*usermodel.User, error)
+	GetUserProfileByID(ctx context.Context, id uuid.UUID) (*dto.UserProfile, error)
 }
 
 func (r *ApplicationRepository) CreateUser(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error {
@@ -39,11 +40,18 @@ func (r *ApplicationRepository) CreateUser(ctx context.Context, a *accountmodel.
 	})
 }
 
-func (r *ApplicationRepository) GetUserProfileByID(ctx context.Context, id uuid.UUID) (*usermodel.User, error) {
-	var u usermodel.User
+func (r *ApplicationRepository) GetUserProfileByID(ctx context.Context, id uuid.UUID) (*dto.UserProfile, error) {
+	var p dto.UserProfile
 
-	return &u, r.GetContext(ctx, &u, `
-		SELECT * FROM users
+	return &p, r.GetContext(ctx, &p, `
+		SELECT 
+			u.username, u.profile_picture_url, u.bio, u.profile_status,
+			u.participations_count, u.wins_count,
+			ARRAY_AGG(t.name) FILTER (WHERE t.name IS NOT NULL) AS tech_stack
+		FROM users u
+			LEFT JOIN users_skills us ON u.id = us.user_id
+			LEFT JOIN technologies t ON us.technology_id = t.id
 		WHERE account_id = $1
+		GROUP BY u.id
 	`, id)
 }
