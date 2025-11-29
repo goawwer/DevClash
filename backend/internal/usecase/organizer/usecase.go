@@ -7,6 +7,6 @@ import (
 	"github.com/google/uuid"
 )
 
-func (o *OrganizerUsecase) GetOrganizerByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error) {
+func (o *OrganizerUsecase) GetOrganizerDetailsByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error) {
 	return o.r.GetOrganizerDetailsByID(ctx, orgID)
 }

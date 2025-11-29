@@ -31,11 +31,11 @@ info:
   title: Dev clash API
   version: "1.0"
 paths:
-  /api/check:
+  /api/image:
     get:
       consumes:
       - application/json
-      description: Check current state of authorization
+      description: Generates a presigned URL for accessing an image stored in S3
       produces:
       - application/json
       responses:
@@ -45,11 +45,15 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
       security:
       - CookieAuth: []
-      summary: Authorized
+      summary: Get S3 Image URL
       tags:
-      - api
+      - s3
   /api/logout:
     post:
       consumes:
@@ -68,9 +72,73 @@ paths:
       - CookieAuth: []
       summary: Logout
       tags:
-      - api
-  /api/users/current/profile:
+      - user
+  /api/organizers/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get current user profile settings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Organizer Profile
+      tags:
+      - organizer
+  /api/teams/create:
     post:
+      consumes:
+      - multipart/form-data
+      description: Get current user profile settings
+      parameters:
+      - description: Team name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Team status
+        in: formData
+        name: team_status
+        type: string
+      - description: Team description
+        in: formData
+        name: description
+        type: string
+      - description: Team picture
+        in: formData
+        name: picture
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Organizer Profile
+      tags:
+      - team
+  /api/users/me/profile:
+    get:
       consumes:
       - application/json
       description: Get current user profile
@@ -90,6 +158,29 @@ paths:
       security:
       - CookieAuth: []
       summary: Profile
+      tags:
+      - user
+  /api/users/me/settings:
+    get:
+      consumes:
+      - application/json
+      description: Get current user profile settings
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Profile settings
       tags:
       - user
   /auth/login:

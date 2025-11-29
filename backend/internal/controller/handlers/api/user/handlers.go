@@ -14,7 +14,7 @@ import (
 // @Security     CookieAuth
 // @Failure      500          {object} wrapper.CustomError
 // @Failure      401          {object} wrapper.CustomError
-// @Router       /api/users/current/profile [post]
+// @Router       /api/users/me/profile [get]
 func (h *UserHandler) GetCurrentUserProfile(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	return h.GetUserProfileByID(w.Request().Context(), c.AccountID)
 }
@@ -28,7 +28,7 @@ func (h *UserHandler) GetCurrentUserProfile(w *wrapper.Wrapper, c *middleware.Cu
 // @Security     CookieAuth
 // @Failure      500          {object} wrapper.CustomError
 // @Failure      401          {object} wrapper.CustomError
-// @Router       /api/users/current/profile [post]
+// @Router        /api/users/me/settings [get]
 func (h *UserHandler) GetCurrentUserSettings(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	return h.GetUserSettingsByID(w.Request().Context(), c.AccountID)
 }

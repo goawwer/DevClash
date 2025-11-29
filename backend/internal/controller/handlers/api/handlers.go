@@ -11,7 +11,7 @@ import (
 
 // @Summary      Logout
 // @Description  Refreshes TokenPair and check refresh token is consumed or not
-// @Tags         api
+// @Tags         user
 // @Accept       json
 // @Produce      json
 // @Success      200
@@ -39,14 +39,14 @@ func Logout(w *wrapper.Wrapper, _ *middleware.CustomClaims) (any, error) {
 
 // @Summary      Get S3 Image URL
 // @Description  Generates a presigned URL for accessing an image stored in S3
-// @Tags         api
+// @Tags         s3
 // @Accept       json
 // @Produce      json
 // @Success      200
 // @Security     CookieAuth
 // @Failure      500          {object} wrapper.CustomError
 // @Failure      401          {object} wrapper.CustomError
-// @Router       /api/logout [post]
+// @Router       /api/image [get]
 func GetS3Url(w *wrapper.Wrapper, _ *middleware.CustomClaims) (any, error) {
 	return s3.PresignKey(&s3.S3GetFileParameters{
 		Ctx:      w.Request().Context(),

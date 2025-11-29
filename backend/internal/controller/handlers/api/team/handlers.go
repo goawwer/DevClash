@@ -5,12 +5,27 @@ import (
 	"net/http"
 
 	"github.com/goawwer/devclash/internal/controller/wrapper"
+	"github.com/goawwer/devclash/internal/domain"
 	"github.com/goawwer/devclash/internal/dto"
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
 	"github.com/goawwer/devclash/pkg/s3"
 )
 
+// @Summary      Organizer Profile
+// @Description  Get current user profile settings
+// @Tags         team
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        name     formData  string  true   "Team name"
+// @Param        team_status formData  string  false   "Team status"
+// @Param        description    formData  string  false   "Team description"
+// @Param        picture     formData  file    false  "Team picture"
+// @Success      200
+// @Security     CookieAuth
+// @Failure      500          {object} wrapper.CustomError
+// @Failure      401          {object} wrapper.CustomError
+// @Router       /api/teams/create [post]
 func (h *TeamHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	var input dto.TeamCreationRequest
 
@@ -54,7 +69,12 @@ func (h *TeamHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (an
 			Filename: input.TeamPictureURL,
 		})
 
-		return nil, err
+		if !errors.Is(err, domain.ErrTeamsNameTaken) {
+			logger.Error("failed to create team")
+			return nil, err
+		}
+
+		return nil, wrapper.NewError(err.Error(), http.StatusBadRequest)
 	}
 
 	return nil, nil

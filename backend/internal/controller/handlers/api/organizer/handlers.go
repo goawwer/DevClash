@@ -9,6 +9,16 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary      Organizer Profile
+// @Description  Get current user profile settings
+// @Tags         organizer
+// @Accept       json
+// @Produce      json
+// @Success      200
+// @Security     CookieAuth
+// @Failure      500          {object} wrapper.CustomError
+// @Failure      401          {object} wrapper.CustomError
+// @Router       /api/organizers/{id} [get]
 func (h *OrganizerHandler) GetOrganizerByID(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	idStr := w.Param("id")
 
@@ -18,5 +28,5 @@ func (h *OrganizerHandler) GetOrganizerByID(w *wrapper.Wrapper, c *middleware.Cu
 		return nil, wrapper.NewError("invalid id type", http.StatusBadRequest)
 	}
 
-	return h.OrganizerUsecase.GetOrganizerByID(w.Request().Context(), uuid)
+	return h.OrganizerUsecase.GetOrganizerDetailsByID(w.Request().Context(), uuid)
 }
