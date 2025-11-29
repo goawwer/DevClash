@@ -20,3 +20,8 @@ type S3GetFileParameters struct {
 	FileName string
 	Expires  time.Duration
 }
+
+type S3RemoveFileParameters struct {
+	Ctx      context.Context
+	Filename string
+}
