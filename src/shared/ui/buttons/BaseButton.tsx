@@ -1,43 +1,33 @@
-import React, { FC, ButtonHTMLAttributes } from "react";
+import React, { FC, ButtonHTMLAttributes, ReactNode } from "react";
 import styles from "./BaseButton.module.scss";
 import cn from "classnames";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
+	status?: "idle" | "pending" | "success" | "error";
 	variant?: "filled" | "bordered";
 	size?: "low" | "default";
+	children: ReactNode;
 };
 
 const BaseButton: FC<Props> = ({
 	children,
 	size = "default",
 	variant = "filled",
+	status,
 	...props
 }) => {
-	if (variant === "filled") {
-		return (
-			<button
-				type="button"
-				{...props}
-				className={cn(styles.baseButton, styles[`baseButton--${size}`])}
-			>
-				{children}
-			</button>
-		);
-	} else {
-		return (
-			<button
-				type="button"
-				{...props}
-				className={cn(
-					styles.baseButton,
-					styles["baseButton--bordered"],
-					styles[`baseButton--${size}`]
-				)}
-			>
-				{children}
-			</button>
-		);
-	}
+	const buttonClass = cn(styles.baseButton, styles[`baseButton--${size}`], {
+		[styles["baseButton--pending"]]: status === "pending",
+		[styles["baseButton--success"]]: status === "success",
+		[styles["baseButton--error"]]: status === "error",
+		[styles["baseButton--bordered"]]: variant === "bordered",
+	});
+
+	return (
+		<button className={buttonClass} {...props}>
+			{children}
+		</button>
+	);
 };
 
 export default BaseButton;

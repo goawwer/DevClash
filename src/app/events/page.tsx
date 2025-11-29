@@ -1,4 +1,4 @@
-import GradientContainer from "@/shared/pageGradient/PageGradient";
+import GradientContainer from "@/shared/templates/pageGradient/PageGradient";
 import styles from "./page.module.scss";
 import ActualEvents from "./sub-components/ActualEvents";
 

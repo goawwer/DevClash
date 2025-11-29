@@ -4,12 +4,12 @@ import { FC } from "react";
 
 type Props = {
 	width?: number;
-	title: string;
-	started_at: string;
-	ended_at: string;
+	title?: string;
+	started_at?: string;
+	ended_at?: string;
 	photo_src: string;
 	photo_alt: string;
-	stack: string;
+	stack?: string;
 };
 
 const PhotoCard: FC<Props> = ({
@@ -24,14 +24,18 @@ const PhotoCard: FC<Props> = ({
 	return (
 		<div className={styles.photoCard} style={{ width: `${width}rem` }}>
 			<div className={styles.photoCard__top}>
-				<p className={styles.photoCard__title}>{title}</p>
-				<p className={styles.photoCard__date}>
-					{started_at} - {ended_at}
-				</p>
+				{title && <p className={styles.photoCard__title}>{title}</p>}
+				{started_at && (
+					<p className={styles.photoCard__date}>
+						{started_at} - {ended_at}
+					</p>
+				)}
 			</div>
 
 			<div className={styles.photoCard__bottom}>
-				<p className={styles.photoCard__stack}>Стэк: {stack}</p>
+				{stack && (
+					<p className={styles.photoCard__stack}>Стэк: {stack}</p>
+				)}
 			</div>
 			<Image src={photo_src} alt={photo_alt} fill />
 		</div>

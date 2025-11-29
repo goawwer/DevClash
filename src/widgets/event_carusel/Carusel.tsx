@@ -111,7 +111,11 @@ const Carusel: FC<Props> = ({ events }) => {
 						)}
 						key={currentEvent - 1}
 					>
-						<PhotoCard {...events[treeArray().prev]} width={25} />
+						<PhotoCard
+							photo_src={events[treeArray().prev].photo_src}
+							width={25}
+							photo_alt={events[treeArray().prev].photo_alt}
+						/>
 					</div>
 
 					{/* next */}
@@ -122,7 +126,11 @@ const Carusel: FC<Props> = ({ events }) => {
 							animation.secondary
 						)}
 					>
-						<PhotoCard {...events[treeArray().next]} width={25} />
+						<PhotoCard
+							photo_src={events[treeArray().next].photo_src}
+							width={25}
+							photo_alt={events[treeArray().next].photo_alt}
+						/>
 					</div>
 				</div>
 			</div>

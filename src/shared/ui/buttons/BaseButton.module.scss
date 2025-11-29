@@ -1,3 +1,17 @@
+@keyframes loading {
+	0% {
+		filter: none;
+	}
+
+	50% {
+		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
+	}
+
+	100% {
+		filter: none;
+	}
+}
+
 .baseButton {
 	background-color: var(--white-color);
 	border-radius: 1000rem;
@@ -15,7 +29,9 @@
 		font-size: var(--large-font-size);
 	}
 
-	&:hover, &:focus, &:focus-visible {
+	&:hover,
+	&:focus,
+	&:focus-visible {
 		transition: all 0.2s ease-in;
 		filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
 	}
@@ -24,5 +40,17 @@
 		background: transparent;
 		color: var(--white-color);
 		border: 0.25rem solid var(--white-color);
+	}
+
+	&--success {
+		filter: drop-shadow(0 0 1rem var(--green-color)) !important;
+	}
+
+	&--error {
+		filter: drop-shadow(0 0 1rem var(--red-color)) !important;
+	}
+
+	&--pending {
+		animation: loading 0.5s ease-out infinite;
 	}
 }

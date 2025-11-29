@@ -1,0 +1,7 @@
+.register {
+	width: 60rem;
+
+	@media(max-width: 1279px){
+		width: 90%;
+	}
+}

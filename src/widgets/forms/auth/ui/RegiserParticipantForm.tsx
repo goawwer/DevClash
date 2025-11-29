@@ -13,6 +13,8 @@ import {
 } from "@/features/forms";
 import { BaseButton } from "@/shared/ui";
 import Link from "next/link";
+import { login, userSignUp } from "@/features/api";
+import { useState } from "react";
 
 type FormValues = User & {
 	confirmPassword: string;
@@ -26,8 +28,26 @@ const RegisterForm = () => {
 		watch,
 	} = useForm<FormValues>();
 
-	const onSubmit = (data: FormValues) => {
-		return console.log(data);
+	const [submitStatus, setStatus] = useState<
+		"idle" | "pending" | "error" | "success"
+	>("idle");
+
+	const onSubmit = async (data: FormValues) => {
+		const user = {
+			email: data.email,
+			name: data.username,
+			password: data.password,
+			username: data.username,
+		};
+
+		try {
+			setStatus("pending");
+			await userSignUp(user);
+			setStatus("success");
+			await login({ email: user.email, password: user.password });
+		} catch (error) {
+			setStatus("error");
+		}
 	};
 
 	const password = watch("password");
@@ -71,7 +91,9 @@ const RegisterForm = () => {
 				<Link href={"/login"} className={styles.form__loginLink}>
 					Уже есть аккаунт?
 				</Link>
-				<BaseButton type="submit">Создать аккаунт</BaseButton>
+				<BaseButton type="submit" status={submitStatus}>
+					Создать аккаунт
+				</BaseButton>
 			</div>
 		</form>
 	);

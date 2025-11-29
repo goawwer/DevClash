@@ -23,9 +23,11 @@ export default function HeaderUnauth() {
 					<PageList />
 				</div>
 
-				<div className={styles.header__enteryButton}>
-					<BaseButton size="low">войти</BaseButton>
-				</div>
+				<NavLink href={"/login"}>
+					<div className={styles.header__enteryButton}>
+						<BaseButton size="low">войти</BaseButton>
+					</div>
+				</NavLink>
 
 				<button
 					onClick={() => setOpen(!open)}
@@ -50,7 +52,7 @@ export default function HeaderUnauth() {
 						<div className={styles.header__mobilePagesList}>
 							<div className={styles[`header__pageList--mobile`]}>
 								<PageList />
-								<NavLink href="/auth/entery">войти</NavLink>
+								<NavLink href="/login">войти</NavLink>
 							</div>
 						</div>
 						<button

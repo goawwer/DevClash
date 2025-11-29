@@ -14,6 +14,9 @@ import {
 } from "@/features/forms";
 import { BaseButton, InputFile } from "@/shared/ui";
 import Link from "next/link";
+import { login, organizerSignUp } from "@/features/api";
+import { Organizer } from "@/entities/organizer.interface";
+import { useState } from "react";
 
 type FormValues = User & {
 	color: string;
@@ -30,8 +33,30 @@ const RegisterOrganizerForm = () => {
 		setValue,
 	} = useForm<FormValues>();
 
-	const onSubmit = (data: FormValues) => {
-		return console.log(data);
+	const [submitStatus, setStatus] = useState<
+		"idle" | "pending" | "error" | "success"
+	>("idle");
+
+	const onSubmit = async (data: FormValues) => {
+		const organizer: Organizer = {
+			name: data.username,
+			email: data.email,
+			color: data.color,
+			logo: data.logo,
+			password: data.password,
+		};
+
+		try {
+			setStatus("pending");
+			await organizerSignUp(organizer);
+			await login({
+				email: organizer.email,
+				password: organizer.password,
+			});
+			setStatus("success");
+		} catch (error) {
+			setStatus("error");
+		}
 	};
 
 	const password = watch("password");
@@ -86,7 +111,9 @@ const RegisterOrganizerForm = () => {
 				<Link href={"/login"} className={styles.form__loginLink}>
 					Уже есть аккаунт?
 				</Link>
-				<BaseButton type="submit">Создать аккаунт</BaseButton>
+				<BaseButton type="submit" status={submitStatus}>
+					Создать аккаунт
+				</BaseButton>
 			</div>
 		</form>
 	);
