@@ -14,12 +14,7 @@ type FormValues = User & {
 };
 
 const LoginForm = () => {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-		watch,
-	} = useForm<FormValues>();
+	const { register, handleSubmit } = useForm<FormValues>();
 
 	const [submitStatus, setStatus] = useState<
 		"idle" | "pending" | "error" | "success"

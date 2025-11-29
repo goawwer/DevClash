@@ -29,7 +29,7 @@
 	--dark-blue-color: #192540;
 
 	--green-color: #4dff59;
-	--dark-greeen-color: #213e18;
+	--dark-green-color: #213e18;
 
 	--yellow-color: #deff4d;
 	--dark-yellow-color: #3e3e18;
@@ -57,10 +57,10 @@ a {
 	transition: 0.25s all 0.05s ease;
 }
 
-a:hover,  a:focus-visible {
+a:hover,
+a:focus-visible {
 	filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.8));
 }
-
 
 h1,
 h2,

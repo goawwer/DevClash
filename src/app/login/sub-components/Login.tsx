@@ -1,4 +1,4 @@
-import { Card, Chooser } from "@/shared/ui";
+import { Card } from "@/shared/ui";
 import { LoginForm } from "@/widgets/forms";
 import styles from "./Login.module.scss";
 

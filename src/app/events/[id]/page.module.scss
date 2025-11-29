@@ -1,0 +1,68 @@
+@keyframes image {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 10%;
+	}
+}
+
+.page {
+	&__titleContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	&__title {
+		color: var(--white-color);
+		margin-bottom: 3rem;
+	}
+
+	&__logo {
+		width: 10rem;
+		height: 10rem;
+	}
+
+	&__infoContainers {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		column-gap: 6rem;
+		row-gap: 3rem;
+		flex-wrap: wrap-reverse;
+	}
+
+	&__tags {
+		display: flex;
+		column-gap: 2.5rem;
+		row-gap: 1.25rem;
+		font-weight: var(--regular-font-weight);
+		margin-bottom: 4rem;
+		flex-wrap: wrap;
+		justify-content: center;
+
+		p {
+			font-size: var(--mid-font-size);
+		}
+	}
+
+	&__banner {
+		width: 100vw;
+		object-fit: cover;
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: -999;
+		opacity: 0%;
+		animation: image 1s ease 0.5s forwards;
+
+		mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+		-webkit-mask-image: linear-gradient(
+			to bottom,
+			black 40%,
+			transparent 100%
+		);
+	}
+}
