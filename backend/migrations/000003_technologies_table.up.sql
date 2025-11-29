@@ -1,10 +1,10 @@
-CREATE TABLE tech_stacks (
+CREATE TABLE technologies (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid (),
     name VARCHAR(150) NOT NULL UNIQUE
 );
 
 INSERT INTO
-    tech_stacks (name)
+    technologies (name)
 VALUES ('Go'),
     ('React'),
     ('Next.js'),
