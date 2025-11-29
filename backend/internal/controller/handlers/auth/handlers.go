@@ -12,6 +12,7 @@ import (
 	"github.com/goawwer/devclash/internal/dto"
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
+	"github.com/goawwer/devclash/pkg/s3"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -95,13 +96,20 @@ func (h *AuthHandler) SignUpOrganizer(w *wrapper.Wrapper) error {
 	}
 
 	if file != nil {
-		input.LogoURL, err = saveLogoAtServer(w.Request().Context(), file, headers, input.Name)
+		input.LogoURL, err = s3.StorePictureAtS3(w.Request().Context(), file, headers, input.Name, "logos")
 		if err != nil {
 			return err
 		}
 	}
 
-	return h.AuthUsecase.SignUpOrganizer(w.Request().Context(), input)
+	if err := h.AuthUsecase.SignUpOrganizer(w.Request().Context(), input); err != nil {
+		s3.Delete(&s3.S3RemoveFileParameters{
+			Ctx:      w.Request().Context(),
+			Filename: input.LogoURL,
+		})
+	}
+
+	return nil
 }
 
 // @Summary      Login

@@ -12,6 +12,7 @@ type Repository interface {
 	UserRepository
 	OrganizerRepository
 	AccountRepository
+	TeamRepository
 }
 
 type ApplicationRepository struct {

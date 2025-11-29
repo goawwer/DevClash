@@ -11,6 +11,7 @@ var constraintMap = map[string]error{
 	"accounts_email_key":  domain.ErrEmailTaken,
 	"users_username_key":  domain.ErrUsernameTaken,
 	"organizers_name_key": domain.ErrOrganizerNameTaken,
+	"teams_name_key":      domain.ErrTeamsNameTaken,
 }
 
 func mapError(err error) error {

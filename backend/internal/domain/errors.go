@@ -4,9 +4,13 @@ import "errors"
 
 // Database
 var (
-	ErrEmailTaken          = errors.New("email already taken")
-	ErrUsernameTaken       = errors.New("username already taken")
-	ErrOrganizerNameTaken  = errors.New("organizator with the same company name already exists")
+	// Duplicates
+	ErrEmailTaken         = errors.New("email already taken")
+	ErrUsernameTaken      = errors.New("username already taken")
+	ErrOrganizerNameTaken = errors.New("organizer with the same company name already exists")
+	ErrTeamsNameTaken     = errors.New("team with the same name already exists, please make up another")
+
+	// Violations
 	ErrForeignKeyViolation = errors.New("referenced entity does not exist")
 	ErrNotNullViolation    = errors.New("missing required fields")
 	ErrCheckViolation      = errors.New("data does not satisfy required constraints")
