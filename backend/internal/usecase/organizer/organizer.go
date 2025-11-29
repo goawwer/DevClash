@@ -15,7 +15,7 @@ type OrganizerUsecase struct {
 	r OrganizerRepository
 }
 
-func NewUserUsecase(repository OrganizerRepository) *OrganizerUsecase {
+func NewOrgUsecase(repository OrganizerRepository) *OrganizerUsecase {
 	return &OrganizerUsecase{
 		r: repository,
 	}
