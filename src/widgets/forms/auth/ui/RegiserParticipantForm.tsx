@@ -43,8 +43,8 @@ const RegisterForm = () => {
 		try {
 			setStatus("pending");
 			await userSignUp(user);
-			setStatus("success");
 			await login({ email: user.email, password: user.password });
+			setStatus("success");
 		} catch (error) {
 			setStatus("error");
 		}

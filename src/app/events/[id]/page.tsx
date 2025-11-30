@@ -5,6 +5,7 @@ import Image from "next/image";
 import StackContainer from "./sub-components/StackContainer";
 import DateContainer from "./sub-components/DateContainer";
 import Tags from "./sub-components/Tags";
+import Description from "./sub-components/Description";
 
 interface Props {
 	params: { slug: string };
@@ -22,12 +23,70 @@ const data = {
 	],
 	started_at: "12.12.2025",
 	ended_at: "15.12.2025",
-	description: "Ало, да-да, описание",
+	description: `# Frontend Meetup: Современный React
+Обсуждаем реальные кейсы и практики в разработке интерфейсов.
+
+**Дата:** 2025-12-12  
+**Время:** 18:30 — 21:30 (Europe/Moscow)  
+**Место:** Москва, ул. Примерная, 10, LoftHub / онлайн (https://meet.example.com/frontend)
+
+---
+
+## О мероприятии
+Встреча разработчиков, где мы разберём новые подходы в React, оптимизацию рендеринга и реальные migration-кейсы с больших проектов. Полезно для middle+ frontend-инженеров и тимлидов.
+
+## Для кого
+- Frontend-разработчики  
+- Архитекторы SPA  
+- Техлиды и менеджеры продуктов
+
+## Программа
+**18:30 — 19:00** — Регистрация и welcome-кофе  
+**19:00 — 19:10** — Открытие — Антон Иванов (организатор)  
+**19:10 — 19:40** — Доклад: *Оптимизация рендеринга в React* — Мария Петрова (XYZ)  
+**19:40 — 20:10** — Доклад: *Миграция на TypeScript: сложности и решения* — Олег Смирнов (ACME)  
+**20:10 — 20:25** — Перерыв  
+**20:25 — 21:00** — Панель: *Архитектура крупных фронтенд-приложений* — спикеры + Q&A  
+**21:00 — 21:30** — Нетворкинг, вопросы спикерам
+
+## Спикеры
+- **Мария Петрова** — Senior Frontend Engineer, XYZ — работает над производительностью интерфейсов более 8 лет.  
+- **Олег Смирнов** — Tech Lead, ACME — ведущий инженер миграционных проектов.
+
+## Регистрация
+- Стоимость: бесплатно (ограничено 100 мест)  
+- Регистрация: https://example.com/register
+
+## Что взять с собой
+- Ноутбук (если планируешь кодить в перерывах)  
+- Визитки для нетворкинга
+
+## Контакты
+Организатор: Антон Иванов — anton@example.com — +7 900 123-45-67  
+Сайт: https://example.com
+
+## Как добраться
+Метро «Примерная» — 5 минут пешком; паркинг рядом (платный).
+
+## Партнёры и спонсоры
+- DevTools — спонсор кофе-паузы  
+- CloudCorp — технологический партнёр
+
+## Часто задаваемые вопросы
+**Q:** Нужен ли билет?  
+**A:** Да, регистрация обязательна, но бесплатна.
+
+---
+
+_Дата публикации описания: 2025-11-30_
+
+`,
 	tags: [
 		{ id: 1, title: "Хакатон" },
 		{ id: 2, title: "Вживую" },
 		{ id: 3, title: "Оплата за призерство" },
 	],
+	color: "green",
 };
 
 const EventDetails: FC<Props> = ({ params }) => {
@@ -62,6 +121,8 @@ const EventDetails: FC<Props> = ({ params }) => {
 				</div>
 			</div>
 			<section className={styles.page__sectionDescription}></section>
+
+			<Description description={data.description} color={data.color} />
 
 			<GradientContainer color="green" />
 			<Image
