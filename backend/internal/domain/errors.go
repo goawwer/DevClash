@@ -1,6 +1,15 @@
 package domain
 
-import "errors"
+import (
+	"errors"
+	"net/http"
+	"strings"
+
+	"github.com/goawwer/devclash/internal/controller/wrapper"
+	"github.com/goawwer/devclash/pkg/logger"
+)
+
+type ApiError struct{}
 
 // Database
 var (
@@ -23,3 +32,23 @@ var (
 	ErrInvalidUsername    = errors.New("username must contains only letters and numbers and be at least 5 characters")
 	ErrInvalidCompanyName = errors.New("name must contains only letters")
 )
+
+// Permission
+var (
+	ErrNotForUserRole = errors.New("sorry, user cannot make an event")
+)
+
+func (a ApiError) RequestFileError(maxSise string, err error) error {
+	if strings.Contains(err.Error(), "request body too large") {
+		return wrapper.NewError(
+			"picture is too large, maximum allowed size is"+maxSise,
+			http.StatusRequestEntityTooLarge,
+		)
+	}
+
+	logger.Error("failed to parse multipart form: ", err)
+	return wrapper.NewError(
+		"invalid file upload format",
+		http.StatusBadRequest,
+	)
+}

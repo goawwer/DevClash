@@ -2,8 +2,9 @@ package api
 
 import (
 	"github.com/go-chi/chi/v5"
+	eventHandler "github.com/goawwer/devclash/internal/controller/handlers/api/event"
 	orgHandler "github.com/goawwer/devclash/internal/controller/handlers/api/organizer"
-	"github.com/goawwer/devclash/internal/controller/handlers/api/team"
+	teamHandler "github.com/goawwer/devclash/internal/controller/handlers/api/team"
 	userHandler "github.com/goawwer/devclash/internal/controller/handlers/api/user"
 	"github.com/goawwer/devclash/internal/controller/wrapper"
 	"github.com/goawwer/devclash/internal/usecase"
@@ -23,7 +24,8 @@ func New(u *usecase.AppUsecase) *chi.Mux {
 
 	r.Mount("/users", userHandler.New(u.User))
 	r.Mount("/organizers", orgHandler.New(u.Org))
-	r.Mount("/teams", team.New(u.Team))
+	r.Mount("/teams", teamHandler.New(u.Team))
+	r.Mount("/events", eventHandler.New(u.Event))
 
 	return r
 }
