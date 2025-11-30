@@ -1,0 +1,19 @@
+@keyframes appear {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+.isAuthed {
+	animation: appear 0.25s ease forwards;
+}
+
+.unauthed {
+	padding: 1rem;
+	border-radius: 1rem;
+	background-color: var(--black-color);
+}

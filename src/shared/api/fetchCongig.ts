@@ -10,6 +10,7 @@ export async function apiFetch<T>(
 			: { "Content-Type": "application/json", ...(headers || {}) };
 
 	const response = await fetch(process.env.NEXT_PUBLIC_API_URL + url, {
+		credentials: "include",
 		headers: checkedHeaders,
 		cache: cache ?? "no-cache",
 		body: body,

@@ -2,10 +2,11 @@ import GradientContainer from "@/shared/templates/pageGradient/PageGradient";
 import styles from "./page.module.scss";
 import { FC } from "react";
 import Image from "next/image";
-import StackContainer from "./sub-components/StackContainer";
-import DateContainer from "./sub-components/DateContainer";
-import Tags from "./sub-components/Tags";
-import Description from "./sub-components/Description";
+import StackContainer from "./sub-components/Containers/StackContainer";
+import DateContainer from "./sub-components/Containers/DateContainer";
+import Tags from "./sub-components/Containers/Tags";
+import Description from "./sub-components/Containers/Description";
+import AuthCheck from "./sub-components/Auth/AuthCheck";
 
 interface Props {
 	params: { slug: string };
@@ -119,8 +120,11 @@ const EventDetails: FC<Props> = ({ params }) => {
 						ended_at={data.ended_at}
 					/>
 				</div>
+
+				<div className={styles.page__check}>
+					<AuthCheck />
+				</div>
 			</div>
-			<section className={styles.page__sectionDescription}></section>
 
 			<Description description={data.description} color={data.color} />
 
