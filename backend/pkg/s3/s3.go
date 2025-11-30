@@ -2,10 +2,7 @@ package s3
 
 import (
 	"context"
-	"fmt"
 	"mime/multipart"
-	"path/filepath"
-	"time"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -43,18 +40,12 @@ func Init(cfg *Config) error {
 	return nil
 }
 
-func Upload(p *S3UploadFileParameters) (string, error) {
-	key := p.Prefix + "/" + p.Filename
-
-	_, err := s3.client.PutObject(p.Ctx, s3.bucketName, key, p.Reader, p.Size, minio.PutObjectOptions{
+func Upload(p *S3UploadFileParameters) error {
+	_, err := s3.client.PutObject(p.Ctx, s3.bucketName, p.Filename, p.Reader, p.Size, minio.PutObjectOptions{
 		ContentType: p.ContentType,
 	})
 
-	if err != nil {
-		return "", err
-	}
-
-	return key, nil
+	return err
 }
 
 func PresignKey(p *S3GetFileParameters) (string, error) {
@@ -66,14 +57,11 @@ func Delete(p *S3RemoveFileParameters) error {
 	return s3.client.RemoveObject(p.Ctx, s3.bucketName, p.Filename, minio.RemoveObjectOptions{})
 }
 
-func StorePictureAtS3(ctx context.Context, f multipart.File, h *multipart.FileHeader, entityName string, prefix string) (string, error) {
+func StorePictureAtS3(ctx context.Context, f multipart.File, h *multipart.FileHeader, filename string) error {
 	defer f.Close()
-
-	filename := fmt.Sprintf("%s-%d%s", entityName, time.Now().Unix(), filepath.Ext(h.Filename))
 
 	return Upload(&S3UploadFileParameters{
 		Ctx:         ctx,
-		Prefix:      prefix,
 		Filename:    filename,
 		Reader:      f,
 		Size:        h.Size,

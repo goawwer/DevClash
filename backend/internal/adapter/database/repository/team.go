@@ -15,10 +15,11 @@ var (
 )
 
 type TeamRepository interface {
-	Create(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error
+	CreateTeam(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error
+	UpdateTeamPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error
 }
 
-func (r *ApplicationRepository) Create(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error {
+func (r *ApplicationRepository) CreateTeam(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error {
 	return r.RunInTransaction(ctx, func(tx *sqlx.Tx) error {
 		err := tx.GetContext(ctx, &t.CreatorID, `
 			SELECT id FROM users 
@@ -53,4 +54,16 @@ func (r *ApplicationRepository) Create(ctx context.Context, accountID uuid.UUID,
 
 		return err
 	})
+}
+
+func (r *ApplicationRepository) UpdateTeamPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error {
+	_, err := r.ExecContext(ctx, `
+		UPDATE teams t
+        SET team_picture_url = $1
+        FROM users u
+        WHERE t.creator_id = u.id
+          AND u.account_id = $2
+	`, newURL, accountID)
+
+	return err
 }

@@ -10,8 +10,8 @@ type TeamHandler struct {
 	*team.TeamUsecase
 }
 
-func handler(o *team.TeamUsecase) *TeamHandler {
-	return &TeamHandler{o}
+func handler(t *team.TeamUsecase) *TeamHandler {
+	return &TeamHandler{t}
 }
 
 func New(usecase *team.TeamUsecase) *chi.Mux {

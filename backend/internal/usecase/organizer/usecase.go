@@ -7,6 +7,16 @@ import (
 	"github.com/google/uuid"
 )
 
-func (o *OrganizerUsecase) GetOrganizerDetailsByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error) {
-	return o.r.GetOrganizerDetailsByID(ctx, orgID)
+type OrganizerRepository interface {
+	GetOrganizerDetailsByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error)
+}
+
+type OrganizerUsecase struct {
+	r OrganizerRepository
+}
+
+func NewOrgUsecase(repository OrganizerRepository) *OrganizerUsecase {
+	return &OrganizerUsecase{
+		r: repository,
+	}
 }

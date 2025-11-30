@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"path"
 	"time"
 
 	"github.com/goawwer/devclash/internal/controller/wrapper"
@@ -13,6 +14,7 @@ import (
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
 	"github.com/goawwer/devclash/pkg/s3"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,6 +26,7 @@ import (
 // @Param        credentials  body      dto.SignUpForm  true "Signup credentials"
 // @Success      200
 // @Failure      400          {object} wrapper.CustomError
+// @Failure      409          {object} wrapper.CustomError
 // @Failure      500          {object} wrapper.CustomError
 // @Router       /auth/signup/user [post]
 func (h *AuthHandler) SignUpUser(w *wrapper.Wrapper) error {
@@ -39,9 +42,9 @@ func (h *AuthHandler) SignUpUser(w *wrapper.Wrapper) error {
 		logger.Error("failed to signup user: ", err)
 		switch {
 		case errors.Is(err, domain.ErrEmailTaken):
-			return wrapper.NewError("user with the same email already exists", http.StatusBadRequest)
+			return wrapper.NewError("user with the same email already exists", http.StatusConflict)
 		case errors.Is(err, domain.ErrUsernameTaken):
-			return wrapper.NewError("user with the same username already exists", http.StatusBadRequest)
+			return wrapper.NewError("user with the same username already exists", http.StatusConflict)
 		default:
 			return err
 		}
@@ -62,14 +65,15 @@ func (h *AuthHandler) SignUpUser(w *wrapper.Wrapper) error {
 // @Param        logo     formData  file    false  "Organizer logo"
 // @Success      200
 // @Failure      400          {object} wrapper.CustomError
+// @Failure      409          {object} wrapper.CustomError
+// @Failure      413          {object} wrapper.CustomError
 // @Failure      500          {object} wrapper.CustomError
 // @Router       /auth/signup/organizer [post]
 func (h *AuthHandler) SignUpOrganizer(w *wrapper.Wrapper) error {
 	var input dto.SignUpInputOrganizerDetails
 
-	if err := w.Request().ParseMultipartForm(10 << 20); err != nil {
-		logger.Error("failed to parse multipart form ")
-		return wrapper.NewError("invalid type", http.StatusBadRequest)
+	if err := w.Request().ParseMultipartForm(250 << 10); err != nil {
+		return domain.ApiError.RequestFileError(domain.ApiError{}, "250KB", err)
 	}
 
 	setters := map[string]func(string){
@@ -86,27 +90,36 @@ func (h *AuthHandler) SignUpOrganizer(w *wrapper.Wrapper) error {
 	}
 
 	file, headers, err := w.Request().FormFile("logo")
+	if err != nil && !errors.Is(err, http.ErrMissingFile) {
+		logger.Error("error with getting form file value: ", err)
+		return err
+	}
+	hasPicture := err == nil
+
+	input.LogoURL = "/defaults/picture/logo.jpg"
+
+	organizerID, err := h.AuthUsecase.SignUpOrganizer(w.Request().Context(), input)
 	if err != nil {
-		if !errors.Is(err, http.ErrMissingFile) {
-			logger.Error("error with getting form file value: ", err)
+		logger.Error("failed to signup user: ", err)
+		switch {
+		case errors.Is(err, domain.ErrEmailTaken):
+			return wrapper.NewError("organizer with the same email already exists", http.StatusConflict)
+		case errors.Is(err, domain.ErrUsernameTaken):
+			return wrapper.NewError("organizer with the same name already exists", http.StatusConflict)
+		default:
 			return err
+		}
+	}
+
+	if hasPicture {
+		newURL := path.Join("logos", uuid.NewString()+headers.Filename)
+		if err := s3.StorePictureAtS3(w.Request().Context(), file, headers, newURL); err != nil {
+			logger.Error("failed to upload team picture: ", err)
 		} else {
-			input.LogoURL = "/defaults/logos/default.jpg"
+			if err := h.AuthUsecase.UpdateLogoByCreatorID(w.Request().Context(), organizerID, newURL); err != nil {
+				return err
+			}
 		}
-	}
-
-	if file != nil {
-		input.LogoURL, err = s3.StorePictureAtS3(w.Request().Context(), file, headers, input.Name, "logos")
-		if err != nil {
-			return err
-		}
-	}
-
-	if err := h.AuthUsecase.SignUpOrganizer(w.Request().Context(), input); err != nil {
-		s3.Delete(&s3.S3RemoveFileParameters{
-			Ctx:      w.Request().Context(),
-			Filename: input.LogoURL,
-		})
 	}
 
 	return nil

@@ -8,7 +8,6 @@ import (
 
 type S3UploadFileParameters struct {
 	Ctx         context.Context
-	Prefix      string
 	Filename    string
 	Reader      io.Reader
 	Size        int64

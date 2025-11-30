@@ -12,6 +12,8 @@ import (
 type OrganizerRepository interface {
 	CreateOrganizer(ctx context.Context, a *accountmodel.Account, org *organizermodel.OrganizerAccount) error
 	GetOrganizerDetailsByID(ctx context.Context, orgID uuid.UUID) (*organizermodel.Details, error)
+	GetOrganizerIDByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error)
+	UpdateLogoByCreatorID(ctx context.Context, accountID uuid.UUID, newURL string) error
 }
 
 func (r *ApplicationRepository) CreateOrganizer(ctx context.Context, a *accountmodel.Account, org *organizermodel.OrganizerAccount) error {
@@ -51,4 +53,25 @@ func (r *ApplicationRepository) GetOrganizerDetailsByID(ctx context.Context, org
 		SELECT org_d.company_description, org_d.logo_url, org_d.brand_color FROM organizers_details org_d
 		WHERE organizer_id = $1 
 	`, orgID)
+}
+
+func (r *ApplicationRepository) GetOrganizerIDByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error) {
+	var id uuid.UUID
+
+	return id, r.GetContext(ctx, &id, `
+		SELECT id FROM organizers 
+		WHERE account_id = $1
+	`, accountID)
+}
+
+func (r *ApplicationRepository) UpdateLogoByCreatorID(ctx context.Context, organizerID uuid.UUID, newURL string) error {
+	_, err := r.ExecContext(ctx, `
+		UPDATE organizers_details od
+		SET logo_url = $1
+		FROM organizers o
+		WHERE od.organizer_id = o.id
+		  AND o.id = $2
+	`, newURL, organizerID)
+
+	return err
 }

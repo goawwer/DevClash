@@ -3,6 +3,7 @@ package team
 import (
 	"errors"
 	"net/http"
+	"path"
 
 	"github.com/goawwer/devclash/internal/controller/wrapper"
 	"github.com/goawwer/devclash/internal/domain"
@@ -10,6 +11,7 @@ import (
 	"github.com/goawwer/devclash/middleware"
 	"github.com/goawwer/devclash/pkg/logger"
 	"github.com/goawwer/devclash/pkg/s3"
+	"github.com/google/uuid"
 )
 
 // @Summary      Organizer Profile
@@ -23,15 +25,16 @@ import (
 // @Param        picture     formData  file    false  "Team picture"
 // @Success      200
 // @Security     CookieAuth
-// @Failure      500          {object} wrapper.CustomError
+// @Failure      400          {object} wrapper.CustomError
 // @Failure      401          {object} wrapper.CustomError
+// @Failure      413          {object} wrapper.CustomError
+// @Failure      500          {object} wrapper.CustomError
 // @Router       /api/teams/create [post]
 func (h *TeamHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	var input dto.TeamCreationRequest
 
-	if err := w.Request().ParseMultipartForm(10 << 20); err != nil {
-		logger.Error("failed to parse multipart form ")
-		return nil, wrapper.NewError("invalid type", http.StatusBadRequest)
+	if err := w.Request().ParseMultipartForm(1 << 20); err != nil {
+		return nil, domain.ApiError.RequestFileError(domain.ApiError{}, "1Mb", err)
 	}
 
 	setters := map[string]func(string){
@@ -47,34 +50,32 @@ func (h *TeamHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (an
 	}
 
 	file, headers, err := w.Request().FormFile("picture")
-	if err != nil {
-		if !errors.Is(err, http.ErrMissingFile) {
-			logger.Error("error with getting form file value: ", err)
-			return nil, err
-		} else {
-			input.TeamPictureURL = "/defaults/picture/team.jpg"
-		}
+	if err != nil && !errors.Is(err, http.ErrMissingFile) {
+		logger.Error("error with getting form file value: ", err)
+		return nil, err
 	}
+	hasPicture := err == nil
 
-	if file != nil {
-		input.TeamPictureURL, err = s3.StorePictureAtS3(w.Request().Context(), file, headers, input.Name, "teams")
-		if err != nil {
-			return nil, err
-		}
-	}
+	input.TeamPictureURL = "/defaults/picture/team.jpg"
 
 	if err := h.TeamUsecase.Create(w.Request().Context(), c.AccountID, &input); err != nil {
-		s3.Delete(&s3.S3RemoveFileParameters{
-			Ctx:      w.Request().Context(),
-			Filename: input.TeamPictureURL,
-		})
-
 		if !errors.Is(err, domain.ErrTeamsNameTaken) {
 			logger.Error("failed to create team")
 			return nil, err
 		}
 
 		return nil, wrapper.NewError(err.Error(), http.StatusBadRequest)
+	}
+
+	if hasPicture {
+		newURL := path.Join("teams", uuid.NewString()+headers.Filename)
+		if err := s3.StorePictureAtS3(w.Request().Context(), file, headers, newURL); err != nil {
+			logger.Error("failed to upload team picture: ", err)
+		} else {
+			if err := h.TeamUsecase.UpdatePictureByCreatorID(w.Request().Context(), newURL, c.AccountID); err != nil {
+				return nil, err
+			}
+		}
 	}
 
 	return nil, nil
