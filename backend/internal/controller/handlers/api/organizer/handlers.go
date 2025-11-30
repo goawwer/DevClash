@@ -10,7 +10,7 @@ import (
 )
 
 // @Summary      Organizer Profile
-// @Description  Get current user profile settings
+// @Description  Get organizer profile
 // @Tags         organizer
 // @Accept       json
 // @Produce      json

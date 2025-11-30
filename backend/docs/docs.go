@@ -15,6 +15,123 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/events/create": {
+            "post": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "description": "Create event (users can't do it)",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "event"
+                ],
+                "summary": "Create event",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "end_time",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "is_free",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "is_online",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "number_of_teams",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "prize",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "start_time",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "team_size",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "tech_stack",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "type",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Event picture",
+                        "name": "picture",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/image": {
             "get": {
                 "security": [
@@ -90,7 +207,7 @@ const docTemplate = `{
                         "CookieAuth": []
                     }
                 ],
-                "description": "Get current user profile settings",
+                "description": "Get organizer profile",
                 "consumes": [
                     "application/json"
                 ],
@@ -127,7 +244,7 @@ const docTemplate = `{
                         "CookieAuth": []
                     }
                 ],
-                "description": "Get current user profile settings",
+                "description": "Create team",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -137,7 +254,7 @@ const docTemplate = `{
                 "tags": [
                     "team"
                 ],
-                "summary": "Organizer Profile",
+                "summary": "Create team",
                 "parameters": [
                     {
                         "type": "string",
@@ -169,8 +286,20 @@ const docTemplate = `{
                     "200": {
                         "description": "OK"
                     },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
                         "schema": {
                             "$ref": "#/definitions/wrapper.CustomError"
                         }
@@ -392,6 +521,18 @@ const docTemplate = `{
                             "$ref": "#/definitions/wrapper.CustomError"
                         }
                     },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -431,6 +572,12 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
                         "schema": {
                             "$ref": "#/definitions/wrapper.CustomError"
                         }

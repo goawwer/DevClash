@@ -14,8 +14,8 @@ import (
 	"github.com/google/uuid"
 )
 
-// @Summary      Organizer Profile
-// @Description  Get current user profile settings
+// @Summary      Create team
+// @Description  Create team
 // @Tags         team
 // @Accept       multipart/form-data
 // @Produce      json

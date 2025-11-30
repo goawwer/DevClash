@@ -15,6 +15,20 @@ import (
 	"github.com/google/uuid"
 )
 
+// @Summary      Create event
+// @Description  Create event (users can't do it)
+// @Tags         event
+// @Accept       multipart/form-data
+// @Produce      json
+// @Param        payload     formData  dto.EventCreationRequest  true   "Event preoperties"
+// @Param        picture     formData  file    true  "Event picture"
+// @Success      200
+// @Security     CookieAuth
+// @Failure      400          {object} wrapper.CustomError
+// @Failure      401          {object} wrapper.CustomError
+// @Failure      413          {object} wrapper.CustomError
+// @Failure      500          {object} wrapper.CustomError
+// @Router       /api/events/create [post]
 func (h *EventHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
 	var input dto.EventCreationRequest
 
