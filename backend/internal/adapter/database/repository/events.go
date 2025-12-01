@@ -16,7 +16,7 @@ type EventRepository interface {
 
 func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.Event) error {
 	return r.RunInTransaction(ctx, func(tx *sqlx.Tx) error {
-		_, err := r.ExecContext(ctx, `
+		_, err := tx.ExecContext(ctx, `
 			INSERT INTO events (id, organizer_id, type_id, title, created_at)
 			VALUES ($1, $2, $3, $4, $5)
 		`, e.ID, e.OrganizerID, e.TypeID, e.Title, e.CreatedAt)
@@ -24,7 +24,7 @@ func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.E
 			return err
 		}
 
-		_, err = r.ExecContext(ctx, `
+		_, err = tx.ExecContext(ctx, `
 			INSERT INTO event_properties (event_id, is_online, is_free, number_of_teams, team_size)
 			VALUES ($1, $2, $3, $4, $5)
 		`, e.Properties.EventID,
@@ -37,7 +37,7 @@ func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.E
 			return err
 		}
 
-		_, err = r.ExecContext(ctx, `
+		_, err = tx.ExecContext(ctx, `
 				INSERT INTO events_details (event_id, event_picture_url, start_time, end_time, description, prize)
 				VALUES ($1, $2, $3, $4, $5, $6)
 			`,
@@ -54,7 +54,7 @@ func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.E
 		}
 
 		for _, techID := range e.Technologies {
-			_, err = r.ExecContext(ctx, `
+			_, err = tx.ExecContext(ctx, `
 				INSERT INTO events_technologies (event_id, technology_id)
 				VALUES ($1, $2)		
 			`, e.ID, techID)
@@ -66,8 +66,6 @@ func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.E
 		return nil
 	})
 }
-
-// func (r *ApplicationRepository) GetByID(ctx context.Context, id uuid.UUID) ()
 
 func (r *ApplicationRepository) GetEventTypeIDByName(ctx context.Context, name string) (uuid.UUID, error) {
 	var id uuid.UUID
