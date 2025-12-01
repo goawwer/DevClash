@@ -1,20 +1,31 @@
 package dto
 
 type UserProfile struct {
-	Username            string    `db:"username" json:"username"`
-	ProfilePictureURL   *string   `db:"profile_picture_url" json:"profile_picture_url"`
-	Bio                 *string   `db:"bio" json:"bio"`
-	ProfileStatus       *string   `db:"profile_status" json:"profile_status"`
-	ParticipationsCount int       `db:"participations_count" json:"participations_count"`
-	WinsCount           int       `db:"wins_count" json:"wins_count"`
-	TechStack           *[]string `db:"tech_stack" json:"tech_stack"`
+	Username            string   `json:"username"`
+	ProfilePictureURL   *string  `json:"profile_picture_url"`
+	Bio                 *string  `json:"bio"`
+	ProfileStatus       *string  `json:"profile_status"`
+	ParticipationsCount int      `json:"participations_count"`
+	WinsCount           int      `json:"wins_count"`
+	TechStack           []string `json:"tech_stack"`
 }
 
-type UserProfileSettings struct {
-	Username          string    `db:"username" json:"username"`
-	Email             string    `db:"email" json:"email"`
-	Bio               *string   `db:"bio" json:"bio"`
-	ProfileStatus     *string   `db:"profile_status" json:"profile_status"`
-	TechStack         *[]string `db:"tech_stack" json:"tech_stack"`
-	ProfilePictureURL *string   `db:"profile_picture_url" json:"profile_picture_url"`
+type UserGetProfileSettings struct {
+	Username          string   `json:"username"`
+	Email             string   `json:"email"`
+	Bio               *string  `json:"bio"`
+	ProfileStatus     *string  `json:"profile_status"`
+	TechStack         []string `json:"tech_stack"`
+	ProfilePictureURL *string  `json:"profile_picture_url"`
+}
+
+type UserUpdateProfileSettings struct {
+	Username          string   `json:"username"`
+	Email             string   `json:"email"`
+	Bio               *string  `json:"bio"`
+	ProfileStatus     *string  `json:"profile_status"`
+	TechStack         []string `json:"tech_stack"`
+	OldPassword       string   `json:"old_password"`
+	NewPassword       string   `json:"new_password"`
+	ProfilePictureURL *string  `json:"profile_picture_url"`
 }

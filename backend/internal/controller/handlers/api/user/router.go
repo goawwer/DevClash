@@ -22,6 +22,7 @@ func New(usecase *user.UserUsecase) *chi.Mux {
 	r.Group(func(u chi.Router) {
 		u.Get("/me/profile", wrapper.AuthWrap(h.GetCurrentUserProfile))
 		u.Get("/me/settings", wrapper.AuthWrap(h.GetCurrentUserSettings))
+		u.Put("/me", wrapper.AuthWrap(h.UpdateUserProfile))
 	})
 
 	return r

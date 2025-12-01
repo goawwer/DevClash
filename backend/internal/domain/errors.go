@@ -33,6 +33,11 @@ var (
 	ErrInvalidCompanyName = errors.New("name must contains only letters")
 )
 
+// User Profile
+var (
+	ErrInvalidOldPassword = errors.New("invalid old password, please try again")
+)
+
 // Permission
 var (
 	ErrNotForUserRole = errors.New("sorry, user cannot make an event")
