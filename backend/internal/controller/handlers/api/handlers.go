@@ -9,6 +9,19 @@ import (
 	"github.com/goawwer/devclash/pkg/s3"
 )
 
+// @Summary      Authorized
+// @Description  Check current state of authorization
+// @Tags         api
+// @Accept       json
+// @Produce      json
+// @Success      200
+// @Security     CookieAuth
+// @Failure      401          {object} wrapper.CustomError
+// @Router       /api/check [get]
+func Check(_ *wrapper.Wrapper, _ *middleware.CustomClaims) (any, error) {
+	return nil, nil
+}
+
 // @Summary      Logout
 // @Description  Refreshes TokenPair and check refresh token is consumed or not
 // @Tags         user

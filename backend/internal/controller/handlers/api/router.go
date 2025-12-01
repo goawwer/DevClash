@@ -18,6 +18,7 @@ func New(u *usecase.AppUsecase) *chi.Mux {
 
 	// api generic logic
 	r.Group(func(r chi.Router) {
+		r.Get("/check", wrapper.AuthWrap(Check))
 		r.Post("/logout", wrapper.AuthWrap(Logout))
 		r.Get("/image", wrapper.AuthWrap(GetS3Url))
 	})

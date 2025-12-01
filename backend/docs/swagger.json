@@ -9,6 +9,37 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
+        "/api/check": {
+            "get": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "description": "Check current state of authorization",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "api"
+                ],
+                "summary": "Authorized",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/events/create": {
             "post": {
                 "security": [
@@ -368,6 +399,117 @@
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/me/update": {
+            "put": {
+                "security": [
+                    {
+                        "CookieAuth": []
+                    }
+                ],
+                "description": "Update current user profile",
+                "tags": [
+                    "user"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "name": "description",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "end_time",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "is_free",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "boolean",
+                        "name": "is_online",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "number_of_teams",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "prize",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "start_time",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "team_size",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "collectionFormat": "csv",
+                        "name": "tech_stack",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "title",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "name": "type",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "file",
+                        "description": "Event picture",
+                        "name": "picture",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/wrapper.CustomError"
+                        }
+                    },
+                    "413": {
+                        "description": "Request Entity Too Large",
                         "schema": {
                             "$ref": "#/definitions/wrapper.CustomError"
                         }

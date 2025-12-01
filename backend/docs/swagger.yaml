@@ -31,6 +31,25 @@ info:
   title: Dev clash API
   version: "1.0"
 paths:
+  /api/check:
+    get:
+      consumes:
+      - application/json
+      description: Check current state of authorization
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Authorized
+      tags:
+      - api
   /api/events/create:
     post:
       consumes:
@@ -262,6 +281,75 @@ paths:
       security:
       - CookieAuth: []
       summary: Profile settings
+      tags:
+      - user
+  /api/users/me/update:
+    put:
+      description: Update current user profile
+      parameters:
+      - in: formData
+        name: description
+        type: string
+      - in: formData
+        name: end_time
+        type: string
+      - in: formData
+        name: is_free
+        type: boolean
+      - in: formData
+        name: is_online
+        type: boolean
+      - in: formData
+        name: number_of_teams
+        type: integer
+      - in: formData
+        name: prize
+        type: string
+      - in: formData
+        name: start_time
+        type: string
+      - in: formData
+        name: team_size
+        type: integer
+      - collectionFormat: csv
+        in: formData
+        items:
+          type: string
+        name: tech_stack
+        type: array
+      - in: formData
+        name: title
+        type: string
+      - in: formData
+        name: type
+        type: string
+      - description: Event picture
+        in: formData
+        name: picture
+        required: true
+        type: file
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "413":
+          description: Request Entity Too Large
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/wrapper.CustomError'
+      security:
+      - CookieAuth: []
+      summary: Update user
       tags:
       - user
   /auth/login:
