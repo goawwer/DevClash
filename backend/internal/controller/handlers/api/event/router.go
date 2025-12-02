@@ -21,8 +21,17 @@ func New(usecase *event.EventUsecase) *chi.Mux {
 
 	r.Post("/create", wrapper.AuthWrap(h.Create))
 	r.Post("/join", wrapper.AuthWrap(h.TeamJoinEvent))
-	r.Get("/all", wrapper.AuthWrap(h.GetAllEvents))
-	r.Get("/{id}", wrapper.AuthWrap(h.GetEventPage))
+
+	return r
+}
+
+func NewPublic(usecase *event.EventUsecase) *chi.Mux {
+	r := chi.NewRouter()
+
+	h := handler(usecase)
+
+	r.Get("/all", wrapper.NoAuthDataWrap(h.GetAllEvents))
+	r.Get("/{id}", wrapper.NoAuthDataWrap(h.GetEventPage))
 
 	return r
 }

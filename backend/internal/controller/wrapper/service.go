@@ -63,3 +63,30 @@ func AuthWrap(handler AuthHandler) http.HandlerFunc {
 		wrapper.JSONEncode(http.StatusOK, res)
 	}
 }
+
+type NoAuthDataHandler func(w *Wrapper) (any, error)
+
+func NoAuthDataWrap(handler NoAuthDataHandler) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		wrapper := &Wrapper{
+			w: w,
+			r: r,
+		}
+
+		res, err := handler(wrapper)
+
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				wrapper.Error(NewError("not found", http.StatusBadRequest))
+				return
+			}
+
+			wrapper.Error(err)
+			return
+		}
+
+		wrapper.JSONEncode(http.StatusOK, res)
+	}
+}

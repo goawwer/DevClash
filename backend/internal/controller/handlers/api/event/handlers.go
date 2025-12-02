@@ -79,14 +79,14 @@ func (h *EventHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (a
 	return nil, nil
 }
 
-func (h *EventHandler) GetEventPage(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+func (h *EventHandler) GetEventPage(w *wrapper.Wrapper) (any, error) {
 	id := w.Param("id")
 	uuidID := uuid.MustParse(id)
 
 	return h.EventUsecase.GetEventPageByID(w.Request().Context(), uuidID)
 }
 
-func (h *EventHandler) GetAllEvents(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+func (h *EventHandler) GetAllEvents(w *wrapper.Wrapper) (any, error) {
 	params := helpers.GetQueryWithFilterParameters(w.Request())
 	return h.EventUsecase.GetAllEvents(w.Request().Context(), params)
 }

@@ -14,19 +14,23 @@ import (
 func New(u *usecase.AppUsecase) *chi.Mux {
 	r := chi.NewRouter()
 
-	r.Use(middleware.Middleware)
+	r.Mount("/events/public", eventHandler.NewPublic(u.Event))
 
-	// api generic logic
 	r.Group(func(r chi.Router) {
-		r.Get("/check", wrapper.AuthWrap(Check))
-		r.Post("/logout", wrapper.AuthWrap(Logout))
-		r.Get("/image", wrapper.AuthWrap(GetS3Url))
-	})
+		r.Use(middleware.Middleware)
 
-	r.Mount("/users", userHandler.New(u.User))
-	r.Mount("/organizers", orgHandler.New(u.Org))
-	r.Mount("/teams", teamHandler.New(u.Team))
-	r.Mount("/events", eventHandler.New(u.Event))
+		// api generic logic
+		r.Group(func(r chi.Router) {
+			r.Get("/check", wrapper.AuthWrap(Check))
+			r.Post("/logout", wrapper.AuthWrap(Logout))
+			r.Get("/image", wrapper.AuthWrap(GetS3Url))
+		})
+
+		r.Mount("/users", userHandler.New(u.User))
+		r.Mount("/organizers", orgHandler.New(u.Org))
+		r.Mount("/teams", teamHandler.New(u.Team))
+		r.Mount("/events", eventHandler.New(u.Event))
+	})
 
 	return r
 }
