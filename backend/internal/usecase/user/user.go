@@ -26,9 +26,16 @@ func (u *UserUsecase) GetUserProfileByID(ctx context.Context, id uuid.UUID) (*dt
 		}
 	}
 
-	techNames, err := u.r.GetTechnologyNamesByIDs(ctx, techIDs)
+	techIDToNameMap, err := u.r.GetTechnologyNamesByIDs(ctx, techIDs)
 	if err != nil {
 		return nil, err
+	}
+
+	finalTechNames := make([]string, 0, len(techIDs))
+	for _, id := range techIDs {
+		if name, ok := techIDToNameMap[id]; ok {
+			finalTechNames = append(finalTechNames, name)
+		}
 	}
 
 	return &dto.UserProfile{
@@ -38,7 +45,7 @@ func (u *UserUsecase) GetUserProfileByID(ctx context.Context, id uuid.UUID) (*dt
 		ProfileStatus:       user.ProfileStatus,
 		ParticipationsCount: user.ParticipationsCount,
 		WinsCount:           user.WinsCount,
-		TechStack:           techNames,
+		TechStack:           finalTechNames,
 	}, nil
 }
 
@@ -55,9 +62,16 @@ func (u *UserUsecase) GetUserSettingsByID(ctx context.Context, id uuid.UUID) (*d
 		}
 	}
 
-	techNames, err := u.r.GetTechnologyNamesByIDs(ctx, techIDs)
+	techIDToNameMap, err := u.r.GetTechnologyNamesByIDs(ctx, techIDs)
 	if err != nil {
 		return nil, err
+	}
+
+	finalTechNames := make([]string, 0, len(techIDs))
+	for _, id := range techIDs {
+		if name, ok := techIDToNameMap[id]; ok {
+			finalTechNames = append(finalTechNames, name)
+		}
 	}
 
 	return &dto.UserGetProfileSettings{
@@ -65,7 +79,7 @@ func (u *UserUsecase) GetUserSettingsByID(ctx context.Context, id uuid.UUID) (*d
 		Email:             user.Email,
 		Bio:               user.Bio,
 		ProfileStatus:     user.ProfileStatus,
-		TechStack:         techNames,
+		TechStack:         finalTechNames,
 		ProfilePictureURL: user.ProfilePictureURL,
 	}, nil
 }

@@ -5,6 +5,7 @@ import (
 
 	eventmodel "github.com/goawwer/devclash/internal/domain/event_model"
 	teammodel "github.com/goawwer/devclash/internal/domain/team_model"
+	"github.com/goawwer/devclash/pkg/helpers"
 	"github.com/google/uuid"
 )
 
@@ -15,9 +16,10 @@ type EventRepository interface {
 	GetOrganizerIDByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error)
 	UpdateEventPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error
 	GetEventByID(ctx context.Context, id uuid.UUID) (*eventmodel.Event, error)
-	GetTechnologyNamesByIDs(ctx context.Context, ids []uuid.UUID) ([]string, error)
+	GetTechnologyNamesByIDs(ctx context.Context, ids []uuid.UUID) (map[uuid.UUID]string, error)
 	GetEventTypeNameByID(ctx context.Context, id uuid.UUID) (string, error)
 	GetTeamsByIDs(ctx context.Context, ids []uuid.UUID) ([]teammodel.Team, error)
+	GetAllEvents(ctx context.Context, filterParams helpers.FilterParameters) ([]*eventmodel.Event, error)
 }
 
 type EventUsecase struct {

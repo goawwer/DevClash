@@ -3,7 +3,6 @@ package event
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"path"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/goawwer/devclash/internal/domain"
 	"github.com/goawwer/devclash/internal/dto"
 	"github.com/goawwer/devclash/middleware"
+	"github.com/goawwer/devclash/pkg/helpers"
 	"github.com/goawwer/devclash/pkg/logger"
 	"github.com/goawwer/devclash/pkg/s3"
 	"github.com/google/uuid"
@@ -83,7 +83,10 @@ func (h *EventHandler) GetEventPage(w *wrapper.Wrapper, c *middleware.CustomClai
 	id := w.Param("id")
 	uuidID := uuid.MustParse(id)
 
-	e, err := h.EventUsecase.GetEventPageByID(w.Request().Context(), uuidID)
-	fmt.Println(e.Title)
-	return e, err
+	return h.EventUsecase.GetEventPageByID(w.Request().Context(), uuidID)
+}
+
+func (h *EventHandler) GetAllEvents(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+	params := helpers.GetQueryWithFilterParameters(w.Request())
+	return h.EventUsecase.GetAllEvents(w.Request().Context(), params)
 }

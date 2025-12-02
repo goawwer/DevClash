@@ -7,6 +7,7 @@ import (
 	"github.com/goawwer/devclash/internal/domain"
 	eventmodel "github.com/goawwer/devclash/internal/domain/event_model"
 	"github.com/goawwer/devclash/internal/dto"
+	"github.com/goawwer/devclash/pkg/helpers"
 	"github.com/google/uuid"
 )
 
@@ -87,7 +88,21 @@ func (e *EventUsecase) GetEventPageByID(ctx context.Context, id uuid.UUID) (*dto
 	techIDs := make([]uuid.UUID, 0, len(event.Technologies))
 	for _, s := range event.Technologies {
 		if s != "" {
-			techIDs = append(techIDs, uuid.MustParse(s))
+			if parsedID, parseErr := uuid.Parse(s); parseErr == nil {
+				techIDs = append(techIDs, parsedID)
+			}
+		}
+	}
+
+	techIDToNameMap, err := e.r.GetTechnologyNamesByIDs(ctx, techIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	finalTechNames := make([]string, 0, len(techIDs))
+	for _, id := range techIDs {
+		if name, ok := techIDToNameMap[id]; ok {
+			finalTechNames = append(finalTechNames, name)
 		}
 	}
 
@@ -129,11 +144,69 @@ func (e *EventUsecase) GetEventPageByID(ctx context.Context, id uuid.UUID) (*dto
 		IsFree:          event.Properties.IsFree,
 		NumberOfTeams:   event.Properties.NumberOfTeams,
 		TeamSize:        event.Properties.TeamSize,
-		TechStack:       event.Technologies,
+		TechStack:       finalTechNames,
 		TeamName:        teamName,
 		TeamPictureURL:  teamPictureURL,
 		TeamStatus:      teamStatus,
 		StartTime:       event.Details.StartTime,
 		EndTime:         event.Details.EndTime,
 	}, nil
+}
+
+func (e *EventUsecase) GetAllEvents(ctx context.Context, filterParams helpers.FilterParameters) ([]*dto.EventListResponse, error) {
+	events, err := e.r.GetAllEvents(ctx, filterParams)
+	if err != nil {
+		return nil, err
+	}
+
+	allUniqueTechIDs := make(map[uuid.UUID]struct{})
+	for _, event := range events {
+		for _, s := range event.Technologies {
+			if s != "" {
+				if id, err := uuid.Parse(s); err == nil {
+					allUniqueTechIDs[id] = struct{}{}
+				}
+			}
+		}
+	}
+
+	techIDsToFetch := make([]uuid.UUID, 0, len(allUniqueTechIDs))
+	for id := range allUniqueTechIDs {
+		techIDsToFetch = append(techIDsToFetch, id)
+	}
+
+	idToNameMap, err := e.r.GetTechnologyNamesByIDs(ctx, techIDsToFetch)
+	if err != nil {
+		return nil, err
+	}
+
+	dtos := make([]*dto.EventListResponse, 0, len(events))
+
+	for _, event := range events {
+		eventTechNames := make([]string, 0, len(event.Technologies))
+		for _, techIDStr := range event.Technologies {
+			if id, err := uuid.Parse(techIDStr); err == nil {
+				if name, ok := idToNameMap[id]; ok {
+					eventTechNames = append(eventTechNames, name)
+				}
+			}
+		}
+
+		dto := &dto.EventListResponse{
+			ID:            event.ID.String(),
+			Title:         event.Title,
+			OrganizerName: event.OrganizerName,
+			EventTypeName: event.EventTypeName,
+			IsOnline:      event.Properties.IsOnline,
+			IsFree:        event.Properties.IsFree,
+			StartTime:     event.Details.StartTime,
+			EndTime:       event.Details.EndTime,
+			Description:   event.Details.Description,
+			TechStack:     eventTechNames,
+		}
+
+		dtos = append(dtos, dto)
+	}
+
+	return dtos, nil
 }

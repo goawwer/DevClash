@@ -16,6 +16,9 @@ type Event struct {
 	UpdatedAt   time.Time `db:"updated_at" json:"updated_at"`
 	IsFinished  bool      `db:"is_finished" json:"is_finished"`
 
+	OrganizerName string `db:"organizer_name" json:"organizer_name"`
+	EventTypeName string `db:"event_type_name" json:"event_type_name"`
+
 	Properties `json:"event_properties"`
 	Details    `json:"event_detail"`
 

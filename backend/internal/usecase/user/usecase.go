@@ -11,7 +11,7 @@ import (
 type UserRepository interface {
 	GetUserProfileByAccountID(ctx context.Context, id uuid.UUID) (*usermodel.User, error)
 	GetUserSettingsByAccountID(ctx context.Context, id uuid.UUID) (*usermodel.User, error)
-	GetTechnologyNamesByIDs(ctx context.Context, ids []uuid.UUID) ([]string, error)
+	GetTechnologyNamesByIDs(ctx context.Context, ids []uuid.UUID) (map[uuid.UUID]string, error)
 	UpdateCurrentUserProfileByID(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error
 	GetAccountByID(ctx context.Context, id uuid.UUID) (*accountmodel.Account, error)
 	UpdateProfilePictureByAccountID(ctx context.Context, newURL string, accountID uuid.UUID) error

@@ -37,3 +37,21 @@ type EventPage struct {
 	EndTime     time.Time `json:"end_time"`
 	Description string    `json:"description"`
 }
+
+type EventListResponse struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+
+	OrganizerName string `json:"organizer_name"`
+	EventTypeName string `json:"event_type_name"`
+
+	IsOnline bool `json:"is_online"`
+	IsFree   bool `json:"is_free"`
+
+	StartTime time.Time `json:"start_time"`
+	EndTime   time.Time `json:"end_time"`
+
+	TechStack []string `json:"tech_stack"`
+
+	Description string `json:"description_preview,omitempty"`
+}
