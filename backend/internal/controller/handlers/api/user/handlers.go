@@ -109,3 +109,7 @@ func (h *UserHandler) UpdateUserProfile(w *wrapper.Wrapper, c *middleware.Custom
 
 	return nil, nil
 }
+
+func (h *UserHandler) GetTeamIDForCurrentUser(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+	return h.UserUsecase.GetTeamIDByUserID(w.Request().Context(), c.AccountID)
+}

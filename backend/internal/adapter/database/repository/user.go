@@ -20,6 +20,16 @@ type UserRepository interface {
 	GetUserSettingsByAccountID(ctx context.Context, id uuid.UUID) (*usermodel.User, error)
 	UpdateCurrentUserProfileByID(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error
 	UpdateProfilePictureByAccountID(ctx context.Context, newURL string, accountID uuid.UUID) error
+	GetUserIDByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error)
+}
+
+func (r *ApplicationRepository) GetUserIDByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error) {
+	var id uuid.UUID
+
+	return id, r.GetContext(ctx, &id, `
+		SELECT id FROM users
+		WHERE account_id = $1
+	`, accountID)
 }
 
 func (r *ApplicationRepository) CreateUser(ctx context.Context, a *accountmodel.Account, u *usermodel.User) error {

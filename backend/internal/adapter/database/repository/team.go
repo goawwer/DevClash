@@ -2,7 +2,9 @@ package repository
 
 import (
 	"context"
+	"database/sql"
 	"errors"
+	"fmt"
 	"time"
 
 	teammodel "github.com/goawwer/devclash/internal/domain/team_model"
@@ -19,6 +21,8 @@ type TeamRepository interface {
 	CreateTeam(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error
 	UpdateTeamPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error
 	GetTeamsByIDs(ctx context.Context, ids []uuid.UUID) ([]teammodel.Team, error)
+	GetJoinValidationData(ctx context.Context, eventID, teamID uuid.UUID) (*teammodel.JoinTeamsToEventValidationData, error)
+	GetTeamIDForUserByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error)
 }
 
 func (r *ApplicationRepository) CreateTeam(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error {
@@ -77,4 +81,44 @@ func (r *ApplicationRepository) GetTeamsByIDs(ctx context.Context, ids []uuid.UU
         SELECT id, name, team_status, team_picture_url FROM teams
         WHERE id = ANY($1)
     `, pq.Array(ids))
+}
+
+func (r *ApplicationRepository) GetJoinValidationData(ctx context.Context, eventID, teamID uuid.UUID) (*teammodel.JoinTeamsToEventValidationData, error) {
+	var data teammodel.JoinTeamsToEventValidationData
+
+	err := r.GetContext(ctx, &data, `
+        SELECT
+            ep.number_of_teams,
+            ep.team_size,
+            t.leader_id,
+            
+            (SELECT COUNT(*) FROM events_teams WHERE event_id = $1) AS current_team_count,
+            
+            (SELECT COUNT(*) FROM teams_members WHERE team_id = $2) AS current_member_count,
+            
+            EXISTS(SELECT 1 FROM events_teams WHERE event_id = $1 AND team_id = $2) AS is_joined
+            
+        FROM event_properties ep
+        JOIN teams t ON t.id = $2
+        WHERE ep.event_id = $1
+    `, eventID, teamID)
+
+	if err == sql.ErrNoRows {
+		return nil, fmt.Errorf("event or team not found")
+	}
+	if err != nil {
+		return nil, err
+	}
+	return &data, nil
+}
+
+func (r *ApplicationRepository) GetTeamIDForUserByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error) {
+	var teamID uuid.UUID
+
+	return teamID, r.GetContext(ctx, &teamID, `
+        SELECT tm.team_id 
+        FROM teams_members tm
+        JOIN users u ON tm.user_id = u.id -- Link the user to the team member record
+        WHERE u.account_id = $1          -- Filter by the incoming account ID
+    `, accountID)
 }

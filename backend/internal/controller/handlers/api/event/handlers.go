@@ -90,3 +90,13 @@ func (h *EventHandler) GetAllEvents(w *wrapper.Wrapper, c *middleware.CustomClai
 	params := helpers.GetQueryWithFilterParameters(w.Request())
 	return h.EventUsecase.GetAllEvents(w.Request().Context(), params)
 }
+
+func (h *EventHandler) TeamJoinEvent(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+	var req dto.TeamJoinRequestToEvent
+
+	if err := w.JSONDecode(&req); err != nil {
+		return nil, err
+	}
+
+	return nil, h.EventUsecase.TeamJoinEvent(w.Request().Context(), req.EventID, req.TeamID, c.AccountID)
+}

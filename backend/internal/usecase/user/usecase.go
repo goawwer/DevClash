@@ -16,6 +16,7 @@ type UserRepository interface {
 	GetAccountByID(ctx context.Context, id uuid.UUID) (*accountmodel.Account, error)
 	UpdateProfilePictureByAccountID(ctx context.Context, newURL string, accountID uuid.UUID) error
 	GetTechnologyIDByName(ctx context.Context, name string) (uuid.UUID, error)
+	GetTeamIDForUserByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error)
 }
 
 type UserUsecase struct {

@@ -133,3 +133,7 @@ func (u *UserUsecase) UpdateCurrentUserProfileByID(ctx context.Context, accountI
 func (u *UserUsecase) UpdatePictureByID(ctx context.Context, newURL string, accountID uuid.UUID) error {
 	return u.r.UpdateProfilePictureByAccountID(ctx, newURL, accountID)
 }
+
+func (u *UserUsecase) GetTeamIDByUserID(ctx context.Context, ID uuid.UUID) (uuid.UUID, error) {
+	return u.r.GetTeamIDForUserByAccountID(ctx, ID)
+}

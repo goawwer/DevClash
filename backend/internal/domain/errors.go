@@ -43,6 +43,14 @@ var (
 	ErrNotForUserRole = errors.New("sorry, user cannot make an event")
 )
 
+// Events
+var (
+	ErrNotLeaderJoining            = errors.New("only the team leader can join the event")
+	ErrTeamAlreadyJoined           = errors.New("team is already registered for this event")
+	ErrTeamCountGreaterThanAllowed = errors.New("event is full, maximum teams reached")
+	ErrTeamMembersCountIsNotValid  = errors.New("current team members count is not valid for event team members count properties")
+)
+
 func (a ApiError) RequestFileError(maxSise string, err error) error {
 	if strings.Contains(err.Error(), "request body too large") {
 		return wrapper.NewError(

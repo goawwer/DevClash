@@ -18,6 +18,7 @@ type EventRepository interface {
 	GetEventByID(ctx context.Context, id uuid.UUID) (*eventmodel.Event, error)
 	GetEventTypeNameByID(ctx context.Context, id uuid.UUID) (string, error)
 	GetAllEvents(ctx context.Context, filterParams helpers.FilterParameters) ([]*eventmodel.Event, error)
+	JoinEvent(ctx context.Context, eventID, teamID uuid.UUID) error
 }
 
 func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.Event) error {
@@ -219,4 +220,13 @@ func (r *ApplicationRepository) GetAllEvents(ctx context.Context, filterParams h
 	}
 
 	return events, nil
+}
+
+func (r *ApplicationRepository) JoinEvent(ctx context.Context, eventID, teamID uuid.UUID) error {
+	_, err := r.ExecContext(ctx, `
+        INSERT INTO events_teams (event_id, team_id)
+        VALUES ($1, $2)
+    `, eventID, teamID)
+
+	return err
 }

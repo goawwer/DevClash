@@ -2,6 +2,7 @@ package event
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/goawwer/devclash/internal/domain"
@@ -209,4 +210,39 @@ func (e *EventUsecase) GetAllEvents(ctx context.Context, filterParams helpers.Fi
 	}
 
 	return dtos, nil
+}
+
+func (e *EventUsecase) TeamJoinEvent(ctx context.Context, eventID, teamID, accountID uuid.UUID) error {
+	data, err := e.r.GetJoinValidationData(ctx, eventID, teamID)
+	if err != nil {
+		return err
+	}
+
+	leaderID, err := e.r.GetUserIDByAccountID(ctx, accountID)
+	if err != nil {
+		return err
+	}
+
+	if data.TeamLeaderID != leaderID {
+		return domain.ErrNotLeaderJoining
+	}
+
+	if data.IsTeamAlreadyJoined {
+		return domain.ErrTeamAlreadyJoined
+	}
+
+	if data.CurrentTeamCount >= data.MaxTeams {
+		return domain.ErrTeamCountGreaterThanAllowed
+	}
+
+	if data.CurrentTeamMemberCount > data.MaxTeamSize {
+		return domain.ErrTeamMembersCountIsNotValid
+	}
+
+	err = e.r.JoinEvent(ctx, eventID, teamID)
+	if err != nil {
+		return fmt.Errorf("failed to register team: %w", err)
+	}
+
+	return nil
 }

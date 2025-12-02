@@ -19,3 +19,15 @@ type Team struct {
 	CreatedAt           time.Time `db:"created_at" json:"created_at"`
 	Disabled            bool      `db:"disabled" json:"disabled"`
 }
+
+type JoinTeamsToEventValidationData struct {
+	MaxTeams    int `db:"number_of_teams"`
+	MaxTeamSize int `db:"team_size"`
+
+	CurrentTeamCount       int `db:"current_team_count"`
+	CurrentTeamMemberCount int `db:"current_member_count"`
+
+	TeamLeaderID uuid.UUID `db:"leader_id"`
+
+	IsTeamAlreadyJoined bool `db:"is_joined"`
+}

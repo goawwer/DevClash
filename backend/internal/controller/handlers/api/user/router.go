@@ -23,6 +23,7 @@ func New(usecase *user.UserUsecase) *chi.Mux {
 		u.Get("/me/profile", wrapper.AuthWrap(h.GetCurrentUserProfile))
 		u.Get("/me/settings", wrapper.AuthWrap(h.GetCurrentUserSettings))
 		u.Put("/me", wrapper.AuthWrap(h.UpdateUserProfile))
+		r.Get("/me/team_id", wrapper.AuthWrap(h.GetTeamIDForCurrentUser))
 	})
 
 	return r

@@ -20,6 +20,7 @@ func New(usecase *event.EventUsecase) *chi.Mux {
 	h := handler(usecase)
 
 	r.Post("/create", wrapper.AuthWrap(h.Create))
+	r.Post("/join", wrapper.AuthWrap(h.TeamJoinEvent))
 	r.Get("/all", wrapper.AuthWrap(h.GetAllEvents))
 	r.Get("/{id}", wrapper.AuthWrap(h.GetEventPage))
 

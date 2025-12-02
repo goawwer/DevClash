@@ -20,6 +20,9 @@ type EventRepository interface {
 	GetEventTypeNameByID(ctx context.Context, id uuid.UUID) (string, error)
 	GetTeamsByIDs(ctx context.Context, ids []uuid.UUID) ([]teammodel.Team, error)
 	GetAllEvents(ctx context.Context, filterParams helpers.FilterParameters) ([]*eventmodel.Event, error)
+	JoinEvent(ctx context.Context, eventID, teamID uuid.UUID) error
+	GetJoinValidationData(ctx context.Context, eventID, teamID uuid.UUID) (*teammodel.JoinTeamsToEventValidationData, error)
+	GetUserIDByAccountID(ctx context.Context, accountID uuid.UUID) (uuid.UUID, error)
 }
 
 type EventUsecase struct {

@@ -2,6 +2,8 @@ package dto
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type EventCreationRequest struct {
@@ -54,4 +56,9 @@ type EventListResponse struct {
 	TechStack []string `json:"tech_stack"`
 
 	Description string `json:"description_preview,omitempty"`
+}
+
+type TeamJoinRequestToEvent struct {
+	EventID uuid.UUID `json:"event_id"`
+	TeamID  uuid.UUID `json:"team_id"`
 }
