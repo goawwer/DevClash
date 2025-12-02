@@ -36,6 +36,11 @@ func (e *EventUsecase) Create(ctx context.Context, id uuid.UUID, role string, in
 		techIDs = append(techIDs, techID)
 	}
 
+	techIDStrings := make([]string, len(techIDs))
+	for i, id := range techIDs {
+		techIDStrings[i] = id.String()
+	}
+
 	return e.r.CreateEvent(ctx, &eventmodel.Event{
 		ID:          eventID,
 		OrganizerID: orgID,
@@ -43,7 +48,7 @@ func (e *EventUsecase) Create(ctx context.Context, id uuid.UUID, role string, in
 		Title:       input.Title,
 		CreatedAt:   time.Now(),
 
-		Properties: &eventmodel.Properties{
+		Properties: eventmodel.Properties{
 			EventID:       eventID,
 			IsOnline:      input.IsOnline,
 			IsFree:        input.IsFree,
@@ -51,7 +56,7 @@ func (e *EventUsecase) Create(ctx context.Context, id uuid.UUID, role string, in
 			TeamSize:      input.TeamSize,
 		},
 
-		Details: &eventmodel.Details{
+		Details: eventmodel.Details{
 			EventID:         eventID,
 			EventPictureURL: input.EventPictureURL,
 			StartTime:       input.StartTime,
@@ -60,10 +65,75 @@ func (e *EventUsecase) Create(ctx context.Context, id uuid.UUID, role string, in
 			Prize:           input.Prize,
 		},
 
-		Technologies: techIDs,
+		Technologies: techIDStrings,
 	})
 }
 
 func (e *EventUsecase) UpdatePictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error {
 	return e.r.UpdateEventPictureByCreatorID(ctx, newURL, accountID)
+}
+
+func (e *EventUsecase) GetEventPageByID(ctx context.Context, id uuid.UUID) (*dto.EventPage, error) {
+	event, err := e.r.GetEventByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	eventType, err := e.r.GetEventTypeNameByID(ctx, event.TypeID)
+	if err != nil {
+		return nil, err
+	}
+
+	techIDs := make([]uuid.UUID, 0, len(event.Technologies))
+	for _, s := range event.Technologies {
+		if s != "" {
+			techIDs = append(techIDs, uuid.MustParse(s))
+		}
+	}
+
+	teamIDs := make([]uuid.UUID, 0, len(event.TeamsIDs))
+	for _, s := range event.TeamsIDs {
+		if s != "" {
+			teamIDs = append(teamIDs, uuid.MustParse(s))
+		}
+	}
+
+	teamsSlice, err := e.r.GetTeamsByIDs(ctx, teamIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	teamName := ""
+	teamPictureURL := ""
+	teamStatus := ""
+
+	if len(teamsSlice) > 0 {
+		team := teamsSlice[0]
+
+		teamName = team.Name
+
+		if team.TeamPictureURL != nil {
+			teamPictureURL = *team.TeamPictureURL
+		}
+		if team.TeamStatus != nil {
+			teamStatus = *team.TeamStatus
+		}
+	}
+
+	return &dto.EventPage{
+		Title:           event.Title,
+		Description:     event.Details.Description,
+		EventPictureURL: event.Details.EventPictureURL,
+		Type:            eventType,
+		IsOnline:        event.Properties.IsOnline,
+		IsFree:          event.Properties.IsFree,
+		NumberOfTeams:   event.Properties.NumberOfTeams,
+		TeamSize:        event.Properties.TeamSize,
+		TechStack:       event.Technologies,
+		TeamName:        teamName,
+		TeamPictureURL:  teamPictureURL,
+		TeamStatus:      teamStatus,
+		StartTime:       event.Details.StartTime,
+		EndTime:         event.Details.EndTime,
+	}, nil
 }

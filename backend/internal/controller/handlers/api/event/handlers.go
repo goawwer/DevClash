@@ -3,6 +3,7 @@ package event
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"path"
 
@@ -76,4 +77,13 @@ func (h *EventHandler) Create(w *wrapper.Wrapper, c *middleware.CustomClaims) (a
 	}
 
 	return nil, nil
+}
+
+func (h *EventHandler) GetEventPage(w *wrapper.Wrapper, c *middleware.CustomClaims) (any, error) {
+	id := w.Param("id")
+	uuidID := uuid.MustParse(id)
+
+	e, err := h.EventUsecase.GetEventPageByID(w.Request().Context(), uuidID)
+	fmt.Println(e.Title)
+	return e, err
 }

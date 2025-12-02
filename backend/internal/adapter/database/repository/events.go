@@ -12,6 +12,8 @@ type EventRepository interface {
 	CreateEvent(ctx context.Context, e *eventmodel.Event) error
 	GetEventTypeIDByName(ctx context.Context, name string) (uuid.UUID, error)
 	UpdateEventPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error
+	GetEventByID(ctx context.Context, id uuid.UUID) (*eventmodel.Event, error)
+	GetEventTypeNameByID(ctx context.Context, id uuid.UUID) (string, error)
 }
 
 func (r *ApplicationRepository) CreateEvent(ctx context.Context, e *eventmodel.Event) error {
@@ -76,6 +78,15 @@ func (r *ApplicationRepository) GetEventTypeIDByName(ctx context.Context, name s
 	`, name)
 }
 
+func (r *ApplicationRepository) GetEventTypeNameByID(ctx context.Context, id uuid.UUID) (string, error) {
+	var name string
+
+	return name, r.GetContext(ctx, &name, `
+		SELECT name FROM event_types 
+		WHERE id = $1
+	`, id)
+}
+
 func (r *ApplicationRepository) UpdateEventPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error {
 	_, err := r.ExecContext(ctx, `
 		UPDATE events_details ed
@@ -87,4 +98,39 @@ func (r *ApplicationRepository) UpdateEventPictureByCreatorID(ctx context.Contex
 	`, newURL, accountID)
 
 	return err
+}
+
+func (r *ApplicationRepository) GetEventByID(ctx context.Context, id uuid.UUID) (*eventmodel.Event, error) {
+	var e eventmodel.Event
+
+	return &e, r.GetContext(ctx, &e, `
+		SELECT
+            e.id, e.organizer_id, e.type_id, e.title, e.created_at, e.updated_at, e.is_finished,
+            
+            ed.event_picture_url, ed.start_time, ed.end_time, ed.description, ed.prize,
+            
+            ep.is_online, ep.is_free, ep.number_of_teams, ep.team_size,
+            
+            COALESCE(
+                (
+                    SELECT ARRAY_AGG(et.technology_id::text)
+                    FROM events_technologies et
+                    WHERE et.event_id = e.id
+                ),
+                '{}'
+            ) AS technologies,
+            
+            COALESCE(
+                (
+                    SELECT ARRAY_AGG(etm.team_id::text)
+                    FROM events_teams etm
+                    WHERE etm.event_id = e.id
+                ),
+                '{}'
+            ) AS teams_ids
+        FROM events e
+        	LEFT JOIN events_details ed ON e.id = ed.event_id
+        	LEFT JOIN event_properties ep ON e.id = ep.event_id
+        WHERE e.id = $1
+	`, id)
 }

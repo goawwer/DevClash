@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 type Event struct {
@@ -15,7 +16,9 @@ type Event struct {
 	UpdatedAt   time.Time `db:"updated_at" json:"updated_at"`
 	IsFinished  bool      `db:"is_finished" json:"is_finished"`
 
-	Properties   *Properties `json:"event_properties"`
-	Details      *Details    `json:"event_detail"`
-	Technologies []uuid.UUID `json:"tech_stack"`
+	Properties `json:"event_properties"`
+	Details    `json:"event_detail"`
+
+	TeamsIDs     pq.StringArray `db:"teams_ids" json:"event_teams"`
+	Technologies pq.StringArray `db:"technologies" json:"tech_stack"`
 }

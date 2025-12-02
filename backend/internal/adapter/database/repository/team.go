@@ -8,6 +8,7 @@ import (
 	teammodel "github.com/goawwer/devclash/internal/domain/team_model"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/lib/pq"
 )
 
 var (
@@ -17,6 +18,7 @@ var (
 type TeamRepository interface {
 	CreateTeam(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error
 	UpdateTeamPictureByCreatorID(ctx context.Context, newURL string, accountID uuid.UUID) error
+	GetTeamsByIDs(ctx context.Context, ids []uuid.UUID) ([]teammodel.Team, error)
 }
 
 func (r *ApplicationRepository) CreateTeam(ctx context.Context, accountID uuid.UUID, t *teammodel.Team) error {
@@ -66,4 +68,13 @@ func (r *ApplicationRepository) UpdateTeamPictureByCreatorID(ctx context.Context
 	`, newURL, accountID)
 
 	return err
+}
+
+func (r *ApplicationRepository) GetTeamsByIDs(ctx context.Context, ids []uuid.UUID) ([]teammodel.Team, error) {
+	var teams []teammodel.Team
+
+	return teams, r.SelectContext(ctx, &teams, ` 
+        SELECT id, name, team_status, team_picture_url FROM teams
+        WHERE id = ANY($1)
+    `, pq.Array(ids))
 }

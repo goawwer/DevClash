@@ -20,13 +20,20 @@ type EventCreationRequest struct {
 }
 
 type EventPage struct {
-	Title           string    `db:"title" json:"title"`
-	EventPictureURL string    `db:"event_picture_url" json:"event_picture_url"`
-	Type            string    `db:"event_type_name" json:"event_type_name"`
-	Properties      *[]string `db:"event_properties" json:"event_properties"`
-	TechStack       *[]string `db:"tech_stack" json:"tech_stack"`
-	Teams           *[]string `db:"teams" json:"teams"`
-	StartDate       time.Time `db:"start_time" json:"start_time"`
-	EndDate         time.Time `db:"end_time" json:"end_time"`
-	Description     string    `db:"description" json:"description"`
+	Title           string   `json:"title"`
+	EventPictureURL string   `json:"event_picture_url"`
+	Type            string   `json:"event_type_name"`
+	IsOnline        bool     `json:"is_online"`
+	IsFree          bool     `json:"is_free"`
+	NumberOfTeams   int      `json:"number_of_teams"`
+	TeamSize        int      `json:"team_size"`
+	TechStack       []string `json:"tech_stack"`
+
+	TeamName       string `json:"team_name"`
+	TeamPictureURL string `json:"team_picture_url"`
+	TeamStatus     string `json:"team_status"`
+
+	StartTime   time.Time `json:"start_time"`
+	EndTime     time.Time `json:"end_time"`
+	Description string    `json:"description"`
 }
