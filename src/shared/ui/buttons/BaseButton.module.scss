@@ -53,4 +53,23 @@
 	&--pending {
 		animation: loading 0.5s ease-out infinite;
 	}
+
+	&--noFocus {
+		&:hover,
+		&:focus,
+		&:focus-visible {
+			filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0.8)) !important;
+		}
+	}
+
+	@media (max-width: 1024px) {
+		&--default {
+			font-size: calc(var(--giant-font-size) * 0.75);
+			padding: 0.5rem 2rem;
+		}
+
+		&--low {
+			font-size: calc(var(--large-font-size) * 0.75);
+		}
+	}
 }

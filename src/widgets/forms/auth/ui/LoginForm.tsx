@@ -8,6 +8,7 @@ import { BaseButton } from "@/shared/ui";
 import Link from "next/link";
 import { login } from "@/features/api";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type FormValues = User & {
 	confirmPassword: string;
@@ -20,6 +21,8 @@ const LoginForm = () => {
 		"idle" | "pending" | "error" | "success"
 	>("idle");
 
+	const router = useRouter();
+
 	const onSubmit = async (data: FormValues) => {
 		const user = {
 			email: data.email,
@@ -30,6 +33,7 @@ const LoginForm = () => {
 			setStatus("pending");
 			await login(user);
 			setStatus("success");
+			router.push("/in/profile");
 		} catch (error) {
 			setStatus("error");
 		}

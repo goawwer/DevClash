@@ -1,0 +1,16 @@
+.title {
+	margin-bottom: 1rem;
+	font-size: var(--giant-font-size);
+}
+
+.stack {
+	display: flex;
+	column-gap: 2rem;
+	row-gap: 1rem;
+	flex-wrap: wrap;
+}
+
+.content {
+	color: var(--blue-color);
+	font-weight: var(--regular-font-weight);
+}

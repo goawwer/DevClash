@@ -8,13 +8,13 @@ import { useState } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
 import Link from "next/link";
 
-export default function HeaderUnauth() {
+export default function HeaderAuthed() {
 	const [open, setOpen] = useState(false);
 	return (
 		<header className={styles.header}>
 			<nav>
 				<div className={styles.header__logo}>
-					<Link href="/">
+					<Link href="/in/feed">
 						<Logo fontSize={2} />
 					</Link>
 				</div>
@@ -23,10 +23,10 @@ export default function HeaderUnauth() {
 					<PageList />
 				</div>
 
-				<NavLink href={"/login"}>
+				<NavLink href={"/in/settings"}>
 					<div className={styles.header__enteryButton}>
-						<BaseButton size="low" noFocus>
-							войти
+						<BaseButton variant="bordered" size="low" noFocus>
+							⚙
 						</BaseButton>
 					</div>
 				</NavLink>
@@ -54,7 +54,7 @@ export default function HeaderUnauth() {
 						<div className={styles.header__mobilePagesList}>
 							<div className={styles[`header__pageList--mobile`]}>
 								<PageList />
-								<NavLink href="/login">войти</NavLink>
+								<NavLink href="/in/settings">настройки</NavLink>
 							</div>
 						</div>
 						<button
@@ -73,15 +73,15 @@ const PageList = () => {
 	return (
 		<ol>
 			<ul>
-				<NavLink href="/" exact={true}>
-					главная
+				<NavLink href="/in/feed" exact={true}>
+					лента
 				</NavLink>
 			</ul>
 			<ul>
 				<NavLink href="/events">мероприятия</NavLink>
 			</ul>
 			<ul>
-				<NavLink href="/about">о проекте</NavLink>
+				<NavLink href="/in/profile">профиль</NavLink>
 			</ul>
 		</ol>
 	);

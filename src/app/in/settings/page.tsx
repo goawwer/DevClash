@@ -1,29 +1,18 @@
+"use client";
+
 import GradientContainer from "@/shared/templates/pageGradient/PageGradient";
 import styles from "./page.module.scss";
-import { FC } from "react";
+import { BaseButton } from "@/shared/ui";
 import Image from "next/image";
-import StackContainer from "./sub-components/Containers/StackContainer";
-import DateContainer from "./sub-components/Containers/DateContainer";
-import Tags from "./sub-components/Containers/Tags";
-import Description from "./sub-components/Containers/Description";
-import AuthCheck from "./sub-components/Auth/AuthCheck";
-
-interface Props {
-	params: { slug: string };
-}
+import FileUploadInput from "@/shared/ui/inputs/InputFile";
+import { EditUserForm } from "@/widgets/forms";
+import { useEffect, useState } from "react";
+import { profileUser, settingsUser } from "@/features/api";
+import { UserProfileDto } from "@/entities/user.interface";
 
 const data = {
-	title: "Хакатон от Сбербанка",
-	brand: "Сбербанк",
-	logo_url: "/dc-logo.png",
-	baner_url: "/sber.png",
-	stack: [
-		{ id: 1, title: "React" },
-		{ id: 2, title: "Java" },
-		{ id: 3, title: "Spring Boot" },
-	],
-	started_at: "12.12.2025",
-	ended_at: "15.12.2025",
+	username: "Профиль",
+
 	description: `# Frontend Meetup: Современный React
 Обсуждаем реальные кейсы и практики в разработке интерфейсов.
 
@@ -82,62 +71,44 @@ const data = {
 _Дата публикации описания: 2025-11-30_
 
 `,
-	tags: [
-		{ id: 1, title: "Хакатон" },
-		{ id: 2, title: "Вживую" },
-		{ id: 3, title: "Оплата за призерство" },
+	status: "Скиньте денег сбер +7-999-999-99-99",
+	color: "blue",
+	participant: 58,
+	prizes: 12,
+	stack: [
+		{ id: 1, title: "React" },
+		{ id: 2, title: "Java" },
+		{ id: 3, title: "Spring Boot" },
 	],
-	color: "green",
 };
 
-const EventDetails: FC<Props> = ({ params }) => {
-	const { slug } = params;
+export default function Settings() {
+	const [userData, setUser] = useState<UserProfileDto | undefined>();
+	useEffect(() => {
+		async function getProfile() {
+			const data = await settingsUser();
+			console.log("settings:", data);
+			setUser(data);
+		}
+
+		getProfile();
+	}, []);
 
 	return (
 		<>
 			<div className={styles.page__titleContainer}>
-				<Image
-					className={styles.page__logo}
-					src={data.logo_url}
-					alt={data.title + "-logo"}
-					width={160}
-					height={160}
-				/>
+				<h1 className={styles.page__title}>Настройки</h1>
 
-				<h1 className={styles.page__title}>
-					{data.brand}.
-					<br /> {data.title}
-				</h1>
-
-				<div className={styles.page__tags}>
-					<Tags tags={data.tags} />
-				</div>
-
-				<div className={styles.page__infoContainers}>
-					<StackContainer stack={data.stack} />
-					<DateContainer
-						started_at={data.started_at}
-						ended_at={data.ended_at}
-					/>
-				</div>
-
-				<div className={styles.page__check}>
-					<AuthCheck />
+				<h2 className={styles.page__subTitle}>Доступная информация</h2>
+				<div className={styles.page__section}>
+					<EditUserForm userData={userData} />
 				</div>
 			</div>
 
-			<Description description={data.description} color={data.color} />
+			<section className={styles.page__containersSection}></section>
 
-			<GradientContainer color="green" />
-			<Image
-				src={data.baner_url}
-				alt={data.brand + "-baner"}
-				className={styles.page__banner}
-				width={1920}
-				height={1170}
-			/>
+			<section className={styles.page__section}></section>
+			<GradientContainer color="blue" />
 		</>
 	);
-};
-
-export default EventDetails;
+}

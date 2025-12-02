@@ -17,6 +17,7 @@ import Link from "next/link";
 import { login, organizerSignUp } from "@/features/api";
 import { Organizer } from "@/entities/organizer.interface";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type FormValues = User & {
 	color: string;
@@ -36,6 +37,7 @@ const RegisterOrganizerForm = () => {
 	const [submitStatus, setStatus] = useState<
 		"idle" | "pending" | "error" | "success"
 	>("idle");
+	const router = useRouter();
 
 	const onSubmit = async (data: FormValues) => {
 		const organizer: Organizer = {
@@ -54,6 +56,7 @@ const RegisterOrganizerForm = () => {
 				password: organizer.password,
 			});
 			setStatus("success");
+			router.push("/in/profile");
 		} catch (error) {
 			setStatus("error");
 		}

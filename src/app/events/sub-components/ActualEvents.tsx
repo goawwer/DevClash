@@ -9,7 +9,8 @@ const eventArray = [
 		ended_at: "15.11.2025",
 		stack: "React, Java Spring",
 		photo_alt: "Сбербанк хакатон",
-		photo_src: "/dj.jpg",
+		photo_src: "/sber.png",
+		id: "Sber",
 	},
 
 	{
@@ -18,7 +19,8 @@ const eventArray = [
 		ended_at: "15.11.2025",
 		stack: "React, GO",
 		photo_alt: "ВТБ Хакатон",
-		photo_src: "/how.jpg",
+		photo_src: "/vtb.jpg",
+		id: "VTB",
 	},
 
 	{
@@ -27,7 +29,8 @@ const eventArray = [
 		ended_at: "15.11.2025",
 		stack: "React, GO",
 		photo_alt: "Т-Банк Хакатон",
-		photo_src: "/ged.jpg",
+		photo_src: "/t.jpg",
+		id: "T-BANK",
 	},
 ];
 

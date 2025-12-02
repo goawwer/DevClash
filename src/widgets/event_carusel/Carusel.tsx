@@ -4,6 +4,7 @@ import cn from "classnames"; // 👈 импортируем classnames
 import styles from "./Carusel.module.scss";
 import animation from "./Animation.module.scss";
 import { PhotoCard } from "@/shared/templates";
+import Link from "next/link";
 
 type Event = {
 	title: string;
@@ -12,6 +13,7 @@ type Event = {
 	photo_src: string;
 	photo_alt: string;
 	stack: string;
+	id: string;
 };
 
 type Props = {
@@ -90,7 +92,12 @@ const Carusel: FC<Props> = ({ events }) => {
 					{"<"}
 				</button>
 
-				<PhotoCard {...events[treeArray().current]} />
+				<Link
+					href={"/events/" + events[treeArray().current].id}
+					className={styles.carusel__link}
+				>
+					<PhotoCard {...events[treeArray().current]} />
+				</Link>
 
 				<button
 					className={styles.carusel__switchButton}

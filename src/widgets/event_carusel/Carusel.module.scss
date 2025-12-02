@@ -2,6 +2,14 @@
 	position: relative;
 	width: 100%;
 
+	&__link {
+		filter: drop-shadow(0 0 0 white) !important;
+
+		&:hover {
+			transform: scale(1.02);
+		}
+	}
+
 	button {
 		font-size: 6rem;
 		font-weight: var(--bold-font-weight);

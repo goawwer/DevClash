@@ -15,6 +15,7 @@ import { BaseButton } from "@/shared/ui";
 import Link from "next/link";
 import { login, userSignUp } from "@/features/api";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type FormValues = User & {
 	confirmPassword: string;
@@ -27,6 +28,8 @@ const RegisterForm = () => {
 		formState: { errors },
 		watch,
 	} = useForm<FormValues>();
+	// внутри компонента:
+	const router = useRouter();
 
 	const [submitStatus, setStatus] = useState<
 		"idle" | "pending" | "error" | "success"
@@ -45,6 +48,7 @@ const RegisterForm = () => {
 			await userSignUp(user);
 			await login({ email: user.email, password: user.password });
 			setStatus("success");
+			router.push("/in/profile");
 		} catch (error) {
 			setStatus("error");
 		}
